@@ -1,0 +1,5 @@
+Dataset,Search Engine,DeepRescore2,PhosSight,Gain,Shared,Loss
+UCEC TMT dataset,Comet,31857,32925,2318,30607,1250
+UCEC TMT dataset,MaxQuant,28234,28785,2416,26369,1865
+UCEC TMT dataset,MSGF+,28938,29799,1927,27872,1066
+UCEC TMT dataset,X!Tandem,26462,27261,1815,25446,1016

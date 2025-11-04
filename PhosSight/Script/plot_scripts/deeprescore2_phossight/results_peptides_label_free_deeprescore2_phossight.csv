@@ -1,0 +1,5 @@
+Dataset,Search Engine,DeepRescore2,PhosSight,Gain,Shared,Loss
+PXD023665 label free dataset,Comet,9239,9958,1167,8791,448
+PXD023665 label free dataset,MaxQuant,10367,10924,1096,9828,539
+PXD023665 label free dataset,MSGF+,8636,9258,1032,8226,410
+PXD023665 label free dataset,X!Tandem,8966,9625,1093,8532,434

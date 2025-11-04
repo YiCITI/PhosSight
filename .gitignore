@@ -1,0 +1,11 @@
+**__pycache__**
+**.vscode**
+**.idea**
+PhosSight/Parameters/*_PhosSight.param
+PhosSight/Script/AutoRT/
+PhosSight/Script/pDeep3/pDeep3/
+PhosSight/Script/PhosphoRS/
+PhosSight/Script/SpectralEntropy/
+PhosSight/Script/temp/
+PhosSight/Script/PhosSight.sh
+
