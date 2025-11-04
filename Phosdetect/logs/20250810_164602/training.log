@@ -1,0 +1,9 @@
+2025-08-10 16:46:04,537 - INFO - Using device: cuda
+2025-08-10 16:46:08,750 - INFO - Created BIGRU_IMPROVED_V2 model
+2025-08-10 16:46:08,891 - INFO - Training on device: cuda
+2025-08-10 16:46:08,891 - INFO - Model type: biGRU_Detect_Improved_V2
+2025-08-10 16:46:08,891 - INFO - Total parameters: 12,942
+2025-08-10 16:46:08,892 - INFO - Trainable parameters: 12,942
+2025-08-10 16:46:08,892 - INFO - Training started with learning_rate=0.0005, epochs=100, patience=15
+2025-08-10 16:46:08,892 - INFO - Optimizer: adam, Scheduler: plateau, Weight decay: 1e-05
+2025-08-10 16:46:08,892 - INFO - ------------------------------ Epoch 1/100 ------------------------------

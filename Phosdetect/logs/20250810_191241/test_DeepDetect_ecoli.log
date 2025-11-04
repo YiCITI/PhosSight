@@ -1,0 +1,7 @@
+2025-08-10 19:12:44,088 - INFO - Using device: cuda
+2025-08-10 19:12:44,897 - INFO - Created BIGRU_IMPROVED_V2 model
+2025-08-10 19:12:45,027 - INFO - Model weights loaded from ./models/20250810_165125/best_model.pth
+2025-08-10 19:12:45,063 - INFO - Starting model testing...
+2025-08-10 19:13:27,807 - INFO - Test Results - Loss: 0.2905, Acc: 0.8835, F1: 0.8113, Precision: 0.7196, Recall: 0.9299, AUC: 0.9584
+2025-08-10 19:13:27,813 - INFO - Final Test Results - Loss: 0.2905, Acc: 0.8835, F1: 0.8113, Precision: 0.7196, Recall: 0.9299, AUC: 0.9584
+2025-08-10 19:13:27,814 - INFO - Results saved to results/20250810_191241/test_results.csv
