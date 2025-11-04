@@ -3,7 +3,7 @@ import os
 import torch
 import numpy as np
 import random
-from model import biGRU_Detect_Improved_V2 as Detect  # biGRU_Detect
+from model import biGRU_Detect_Improved_V2 as Detect
 from torch.utils.data import DataLoader, Dataset
 import pandas as pd
 import argparse

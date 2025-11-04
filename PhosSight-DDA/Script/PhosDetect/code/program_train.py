@@ -5,7 +5,7 @@ from torch import nn
 import numpy as np
 from sklearn.metrics import roc_auc_score, accuracy_score, f1_score, precision_score, recall_score
 import random
-from model import biGRU_Detect_Improved_V2 as Detect  # biGRU_Detect
+from model import biGRU_Detect_Improved_V2 as Detect
 from torch.utils.data import DataLoader, Dataset
 from sklearn.model_selection import train_test_split
 import pandas as pd

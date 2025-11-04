@@ -4,29 +4,29 @@
 
 - [Title of Paper](#title-of-paper)
   - [Contents](#contents)
-  - [Directory structure of PhosSight](#directory-structure-of-phossight)
-  - [Customize environment for PhosSight](#customize-environment-for-phossight)
-    - [Our PhosSight environment](#our-phossight-environment)
-    - [Computational Time](#computational-time)
-    - [Installation](#installation)
+  - [DDA](#dda)
+    - [Files Structure](#files-structure)
+    - [How to Use](#how-to-use)
     - [Data type](#data-type)
-  - [Usage](#usage)
     - [Download example data](#download-example-data)
     - [Directory structure of input](#directory-structure-of-input)
     - [Parameters of PhosSight](#parameters-of-phossight)
     - [Run PhosSight](#run-phossight)
-  - [Output](#output)
-  - [Other functions](#other-functions)
-    - [Quantification for TMT dataset](#quantification-for-tmt-dataset)
-    - [Kinase activity score inference](#kinase-activity-score-inference)
+    - [Output](#output)
+    - [Other functions](#other-functions)
+      - [Quantification for TMT dataset](#quantification-for-tmt-dataset)
+      - [Kinase activity score inference](#kinase-activity-score-inference)
+  - [DIA](#dia)
   - [Contact](#contact)
-  - [How to Use](#how-to-use)
+  - [Acknowledgements](#acknowledgements)
   - [References](#references)
 
-## Directory structure of PhosSight
+## DDA
+
+### Files Structure
 
 ```
-PhosSight
+PhosSight-DDA
 |---Script
 |---|---DeepRelocalization
 |---|---Features
@@ -58,36 +58,28 @@ PhosSight
 - **Parameters** include 9 parameter files for the three test datasets of four search engines used in our manuscript, including label free dataset (PRIDE ID: PXD000138 and PXD023665) and UCEC TMT dataset, respectively.
 - **Install** includes scripts for installing PhosSight, e.g., configuring the deep learning conda environment, and installing R packages.
 
-## Customize environment for PhosSight
+### How to Use
 
-### Our PhosSight environment
-
-- Windows 10 64bit. To meet the Docker Desktop requirements, the Windows system needs to be running Windows 10 Pro, Enterprise, or Home (18363+) as the operating system version.
-- [Git](https://git-scm.com/downloads). To provide command-line interface (CLI) for users to execute the workflow, the Git on Windows system needs to be installed.
-- [Docker Desktop](https://docs.docker.com/install/). Both [PGA](https://github.com/wenbostar/PGA) and [Percolator](https://github.com/percolator/percolator) were installed using Docker.
-- [Anaconda](https://www.anaconda.com/download). We built three conda environments for [AutoRT](https://github.com/bzhanglab/AutoRT), [pDeep3](https://github.com/pFindStudio/pDeep3) and R, respectively, to meet the requirements of different environment verisons, e.g. tensorflow.
-
-### Computational Time
-
-- The computational time required by PhosSight is dependent on various factors, such as the size of the dataset and the specific hardware configuration.
-- Due to the involvement of deep learning models, PhosSight may require more computational time than traditional search engine + localization steps.
-- For the synthetic dataset, it took approximately 2 hours to complete the analysis using a Windows machine.
-- For the UCEC TMT dataset, the analysis required approximately 9 hours to complete using a Windows machine.
-
-### Installation
-
-- Download Git on the windows system： https://git-scm.com/downloads Right-click the mouse to open the Git Bash. **Please install and run PhosSight under Git Bash as an administrator.**
-- Install [Docker Desktop for Windows system](https://docs.docker.com/install/) (>=19.03).
-- Install [Anaconda for Windows system](https://www.anaconda.com/download) and get the Conda path (default is in /C/ProgramData/anaconda3).
-- Download and install PhosSight in your folder.
-
-```
-$ git clone https://github.com/YiCITI/PhosSight.git
-$ cd PhosSight
-$ bash Install/InstallDependency.sh . $AnacondaPath
-```
-
-**After installation, please verify whether the AutoRT, pDeep3, and R_env conda environments exist in the Anaconda environment folder (typically located at C:\ProgramData\anaconda3\envs) or not.**
+1. Install [Git](https://git-scm.com/downloads), [Docker](https://docs.docker.com/install/) and [Anaconda](https://www.anaconda.com/download) on Windows Platform.
+2. Clone the repository:
+    ```shell
+    git clone https://github.com/YiCITI/PhosSight.git
+    cd PhosSight
+    ```
+3. Install the required packages and dependencies:
+    ```shell
+    cd PhosSight-DDA/Install
+    # use Git Bash to run the script below!!!
+    bash InstallDependency.sh  # run the script to install all dependencies or run step by step manually
+    ```
+4. Download the datasets from [Zenodo](https://zenodo.org/records/10049730)
+5. Modify the parameter files in `Parameters/` and run the `Script/PhosSight.sh` script:
+   ```shell
+    cd PhosSight-DDA/Script
+    # use Git Bash to run the script below!!!
+    # For example:
+    bash PhosSight.sh ../Parameters/PXD000138_maxquant.param  # run the script or execute step by step manually
+   ```
 
 ### Data type
 
@@ -95,8 +87,6 @@ $ bash Install/InstallDependency.sh . $AnacondaPath
 - Peptide Type: PhosSight is applicable to different types of peptides, including both labeled (e.g., TMT-labeled) and unlabeled peptides. However, it is important to note that PhosSight is specifically designed to handle peptides with phosphorylation modification.
 - The current version supports four search engines, [MS-GF+ (v2019.02.28)](https://github.com/MSGFPlus/msgfplus), [Comet (2018.01 rev.4)](http://comet-ms.sourceforge.net/), [X!Tandem (v2017.2.1.2)](https://www.thegpm.org/TANDEM/), and [MaxQuant (v1.6.5.0)](https://maxquant.org/).
 - Computational Requirements: Currently, PhosSight only supports running on Windows systems. The computational requirements for running PhosSight depend on the size of the dataset and the specific hardware configuration. PhosSight utilizes deep learning models, and the computational demands may increase with larger datasets. We recommend running PhosSight on a machine with sufficient computational resources, such as a multi-core CPU and a GPU, to ensure efficient processing.
-
-## Usage
 
 ### Download example data
 
@@ -281,7 +271,7 @@ $ cd PhosSight/Script
 $ bash PhosSight.sh $param_path
 ```
 
-## Output
+### Output
 
 PhosSight will output results of each step, including
 
@@ -298,44 +288,34 @@ PhosSight also output two tables as the final results:
 * File named 'Method1Results.txt' which is filtered using both PGA FDR < 1% and PhosphoRS localization probability > 0.75.
 * File named 'PhosSightResults.txt' which is filtered using both q-value < 1% and DeepLocalization probability > 0.75.
 
-## Other functions
+### Other functions
 
-### Quantification for TMT dataset
+#### Quantification for TMT dataset
 
 In our manuscript, we used [MASCI](https://github.com/PNNL-Comp-Mass-Spec/MASIC) to perform the TMT quantification for both TMT10 (UCEC) and TMT11 (HCC) datasets. We prepared the original scripts we used for the quantification under the 'Script/TMTQuantification' folder. You can change the input data path and parameters used for MASCI following our scripts to do the TMT quantification.
 
-### Kinase activity score inference
+#### Kinase activity score inference
 
 In our manuscript, we performed kinase activity score inference for the HCC datasets. We prepared the original scripts we used under the 'Script/KinaseActivityScoreInference' folder. The excel file ('mmc4.xlsx') contains the list of known targets that we used for the inference. You can change the input data path and parameters to do the kinase activity score inference.
+
+## DIA
+
+Coming soon...
 
 ## Contact
 
 Xinpei Yi - [@yixinpei](https://twitter.com/yixinpei) - yixinpei13@gmail.com
-`<br/>`Project Link: [https://github.com/bzhanglab/PhosSight](https://github.com/bzhanglab/PhosSight)
-`<br/>`Lab Website: [bingzhang-Lab BCM](https://www.zhang-lab.org/)
 
-## How to Use
+## Acknowledgements
 
-1. Install [Git](https://git-scm.com/downloads), [Docker](https://docs.docker.com/install/) and [Anaconda](https://www.anaconda.com/download) on Windows Platform.
-2. Clone the repository:
-    ```shell
-    git clone https://github.com/YiCITI/PhosSight.git
-    cd PhosSight
-    ```
-3. Install the required packages and dependencies:
-    ```shell
-    cd Install
-    bash InstallDependency.sh  # run the script to install all dependencies or run step by step manually
-    ```
-4. Download the datasets from [Zenodo](https://zenodo.org/records/10049730)
-5. Modify the parameter files in `Parameters/` and run the `Script/PhosSight.sh` script:
-   ```shell
-    cd PhosSight/Script
-    bash PhosSight.sh $param_path
-   ```
+- [DeepRescore2](https://github.com/bzhanglab/DeepRescore2)
+- [AutoRT](https://github.com/bzhanglab/AutoRT)
+- [pDeep3](https://github.com/pFindStudio/pDeep3)
+- [PhosphoRS](https://github.com/lmsac/phosphoRS-cli)
+- [SpectralEntropy](https://github.com/YuanyueLi/SpectralEntropy)
 
 ## References
 
-If you find our work useful in your research or if you use parts of this code please consider citing our [paper](https://doi.org/10.1101/2023.01.11.523329):
+```
 
-Yi, Xinpei, Wen Bo, Shuyi Ji, Alexander B. Saltzman, Eric J. Jaehnig, Jonathan T. Lei, Qiang Gao, and Bing Zhang (2023), **Deep learning prediction boosts phosphoproteomics-based discoveries through improved phosphopeptide identification**. *bioRxiv*. [doi:10.1101/2023.01.11.523329](https://doi.org/10.1101/2023.01.11.523329)
+```
