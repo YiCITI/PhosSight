@@ -1,8 +1,5 @@
-# Title of Paper
 
 ## Contents
-
-- [Title of Paper](#title-of-paper)
   - [Contents](#contents)
   - [Phosdetect](#phosdetect)
     - [Files Structure](#files-structure)
