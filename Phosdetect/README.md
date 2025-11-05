@@ -1,6 +1,6 @@
 
 
-├── model.py              # 模型定义（包含V2改进）
+├── model.py              # 模型定义
 ├── train.py              # 训练脚本
 ├── test.py               # 测试脚本
 ├── run_training.py       # 便捷训练脚本

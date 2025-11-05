@@ -39,6 +39,17 @@ Phosdetect
 |---run_training.py       # Convenient training wrapper script
 |---run_testing.py        # Convenient testing wrapper script
 |---README.md             # Phosdetect documentation
+|---data/                 # Data directory
+|---|---train/            # Training dataset
+|---|---|---balanced_dataset_1.csv
+|---|---test/             # Test datasets
+|---|---|---DeepDetect_ecoli.csv
+|---|---|---DeepDetect_human.csv
+|---|---|---DeepDetect_mouse.csv
+|---|---|---DeepDetect_yeast.csv
+|---|---|---DeepRescore2_HCC.csv
+|---|---|---DeepRescore2_label_free.csv
+|---|---|---DeepRescore2_UCEC.csv
 |---logs/                 # Training and testing logs directory
 |---|---20250810_164602/
 |---|---20250810_165125/
@@ -52,6 +63,16 @@ Phosdetect
 - **train.py** and **run_training.py** provide training functionality for the Phosdetect model.
 - **test.py** and **run_testing.py** provide testing functionality for evaluating model performance.
 - **infer.py** allows inference on custom peptide sequences.
+- **data/** contains the training and test datasets:
+  - **data/train/** stores the training dataset (`balanced_dataset_1.csv`)
+  - **data/test/** stores seven test datasets for model evaluation:
+    - `DeepDetect_ecoli.csv` - E. coli dataset from DeepDetect
+    - `DeepDetect_human.csv` - Human dataset from DeepDetect
+    - `DeepDetect_mouse.csv` - Mouse dataset from DeepDetect
+    - `DeepDetect_yeast.csv` - Yeast dataset from DeepDetect
+    - `DeepRescore2_HCC.csv` - HCC dataset from DeepRescore2
+    - `DeepRescore2_label_free.csv` - Label-free dataset from DeepRescore2
+    - `DeepRescore2_UCEC.csv` - UCEC dataset from DeepRescore2
 - **logs/** stores training and testing logs with timestamps.
 - **models/** stores trained model weights with timestamps.
 
@@ -72,14 +93,14 @@ To train the Phosdetect model, you can use either the convenient wrapper script 
 
 ```bash
 cd Phosdetect
-python run_training.py --data_path ../data/train/balanced_dataset_1.csv
+python run_training.py --data_path ./data/train/balanced_dataset_1.csv
 ```
 
 #### Using the training script directly:
 
 ```bash
 cd Phosdetect
-python train.py -p ../data/train/balanced_dataset_1.csv \
+python train.py -p ./data/train/balanced_dataset_1.csv \
                 -m ./models/best_model.pth \
                 --model_type bigru_improved_v2 \
                 -b 128 -e 100 -lr 0.0005 -d 0.3
@@ -132,7 +153,7 @@ The wrapper script will automatically test on multiple datasets:
 
 ```bash
 cd Phosdetect
-python test.py -p ../data/test/DeepDetect_human.csv \
+python test.py -p ./data/test/DeepDetect_human.csv \
                -m ./models/best_model.pth \
                --model_type bigru_improved_v2
 ```
@@ -474,6 +495,7 @@ Coming soon...
 ## Contact
 
 Xinpei Yi - [@yixinpei](https://twitter.com/yixinpei) - yixinpei13@gmail.com
+
 
 ## Acknowledgements
 
