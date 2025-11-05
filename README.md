@@ -4,8 +4,14 @@
 
 - [Title of Paper](#title-of-paper)
   - [Contents](#contents)
-  - [DDA](#dda)
+  - [Phosdetect](#phosdetect)
     - [Files Structure](#files-structure)
+    - [Model Description](#model-description)
+    - [How to Train](#how-to-train)
+    - [How to Test](#how-to-test)
+    - [How to Infer](#how-to-infer)
+  - [DDA](#dda)
+    - [Files Structure](#files-structure-1)
     - [How to Use](#how-to-use)
     - [Data type](#data-type)
     - [Download example data](#download-example-data)
@@ -20,6 +26,172 @@
   - [Contact](#contact)
   - [Acknowledgements](#acknowledgements)
   - [References](#references)
+
+## Phosdetect
+
+Phosdetect is a deep learning model for phosphopeptide identification based on BiGRU architecture with physicochemical property features. Both DDA and DIA workflows are based on Phosdetect for phosphopeptide identification and analysis.
+
+### Files Structure
+
+```
+Phosdetect
+|---model.py              # Model definition (includes V2 improvements)
+|---train.py              # Training script
+|---test.py               # Testing script
+|---infer.py              # Inference script for custom sequences
+|---run_training.py       # Convenient training wrapper script
+|---run_testing.py        # Convenient testing wrapper script
+|---README.md             # Phosdetect documentation
+|---logs/                 # Training and testing logs directory
+|---|---20250810_164602/
+|---|---20250810_165125/
+|---models/               # Model weights directory
+|---|---20250810_164602/
+|---|---20250810_165125/
+|---|---|---best_model.pth
+```
+
+- **model.py** implements the BiGRU-based models for phosphopeptide detection, including the improved V2 version with physicochemical property features.
+- **train.py** and **run_training.py** provide training functionality for the Phosdetect model.
+- **test.py** and **run_testing.py** provide testing functionality for evaluating model performance.
+- **infer.py** allows inference on custom peptide sequences.
+- **logs/** stores training and testing logs with timestamps.
+- **models/** stores trained model weights with timestamps.
+
+### Model Description
+
+Phosdetect uses a bidirectional GRU (BiGRU) architecture to identify phosphopeptides from peptide sequences. The V2 improved version incorporates physicochemical property features including hydrophobicity, charge, and polarity for each amino acid and phosphorylated residue.
+
+The model supports the following amino acids and modifications:
+- Standard 20 amino acids (A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, Y)
+- Phosphorylated residues (s for pSer, t for pThr, y for pTyr)
+- Padding token (Z)
+
+### How to Train
+
+To train the Phosdetect model, you can use either the convenient wrapper script or the training script directly.
+
+#### Using the convenient wrapper script:
+
+```bash
+cd Phosdetect
+python run_training.py --data_path ../data/train/balanced_dataset_1.csv
+```
+
+#### Using the training script directly:
+
+```bash
+cd Phosdetect
+python train.py -p ../data/train/balanced_dataset_1.csv \
+                -m ./models/best_model.pth \
+                --model_type bigru_improved_v2 \
+                -b 128 -e 100 -lr 0.0005 -d 0.3
+```
+
+#### Training Parameters:
+
+- `--data_path` or `-p`: Path to training data (CSV format: sequence, label)
+- `--batch_size` or `-b`: Batch size (default: 128)
+- `--epochs` or `-e`: Number of training epochs (default: 100)
+- `--learning_rate` or `-lr`: Learning rate (default: 0.0005)
+- `--dropout` or `-d`: Dropout rate (default: 0.3)
+- `--model_type`: Model type (default: bigru_improved_v2)
+- `--patience`: Early stopping patience (default: 15)
+- `--optimizer`: Optimizer type - adam, adamw, or sgd (default: adam)
+- `--scheduler`: Learning rate scheduler - plateau, cosine, or step (default: plateau)
+- `--in_features`: Input feature dimension (default: 10)
+- `--out_features`: Output feature dimension (default: 20)
+- `--num_layers`: Number of GRU layers (default: 2)
+- `--log_file`: Path to log file (optional)
+- `--verbose`: Enable verbose output
+
+The training process will automatically:
+- Create timestamped directories for logs and model weights
+- Implement early stopping to prevent overfitting
+- Save the best model based on validation performance
+- Log training metrics to both console and log file
+
+### How to Test
+
+To test the trained Phosdetect model, you can use either the convenient wrapper script or the testing script directly.
+
+#### Using the convenient wrapper script:
+
+```bash
+cd Phosdetect
+python run_testing.py --model_path ./models/20250810_165125/best_model.pth
+```
+
+The wrapper script will automatically test on multiple datasets:
+- DeepDetect_ecoli
+- DeepDetect_human
+- DeepDetect_mouse
+- DeepDetect_yeast
+- DeepRescore2_HCC
+- DeepRescore2_label_free
+- DeepRescore2_UCEC
+
+#### Using the testing script directly:
+
+```bash
+cd Phosdetect
+python test.py -p ../data/test/DeepDetect_human.csv \
+               -m ./models/best_model.pth \
+               --model_type bigru_improved_v2
+```
+
+#### Testing Parameters:
+
+- `-p` or `--data_path`: Path to test data (CSV format: sequence, label)
+- `-m` or `--model_path`: Path to trained model weights
+- `-b` or `--batch_size`: Batch size (default: 128)
+- `--model_type`: Model type (default: bigru_improved_v2)
+- `--log_file`: Path to log file (optional)
+- `--output_file`: Path to save results CSV (optional)
+- `--in_features`: Input feature dimension (must match training, default: 10)
+- `--out_features`: Output feature dimension (must match training, default: 20)
+- `--num_layers`: Number of GRU layers (must match training, default: 2)
+- `--dropout`: Dropout rate (must match training, default: 0.3)
+- `--verbose`: Enable verbose output
+
+The testing process will:
+- Calculate performance metrics (AUC, Accuracy, F1-score, Precision, Recall)
+- Save results to a CSV file if specified
+- Log testing metrics to both console and log file
+
+### How to Infer
+
+To perform inference on custom peptide sequences:
+
+```bash
+cd Phosdetect
+python infer.py --model_path ./models/20250810_165125/best_model.pth \
+                --seq_file sequences.txt \
+                --output_csv results.csv
+```
+
+Or provide sequences directly via command line:
+
+```bash
+cd Phosdetect
+python infer.py --model_path ./models/20250810_165125/best_model.pth \
+                --seq "MKTAYIAKQRQISFVKSHFSRQLEERLGLIEVQAPILSRVGDGTQDNLSGAEKAVQVKVKALPDAQFEVVHSLAKWKRQTLGQHDFSAGEGLYTHMKALRPDEDRLSPLHSVYVDQWDWERVMGDGERQFSTLKSTVEAIWAGIKATEAAVSEEFGLAPFLPDQIHFVHSQELLSRYPDLDAKGRERAIAKDLGAVFLVGIGGKLSDGHRHDVRAPDYDDWSTPSELGHAGLNGDILVWNPVLEDAFELSSMGIRVDADTLKHQLALTGDEDRLELEWHQALLRGEMPQTIGGGIGQSRLTMLLLQLPHIGQVQAGVWPAAVRESVPSLL" \
+                --output_csv results.csv
+```
+
+#### Inference Parameters:
+
+- `--model_path`: Path to trained model weights (required)
+- `--seq`: Peptide sequences provided directly on command line (space-separated)
+- `--seq_file`: Path to text file with sequences (one per line)
+- `--batch_size`: Batch size for inference (default: 128)
+- `--in_features`: Input feature dimension (must match training, default: 10)
+- `--out_features`: Output feature dimension (must match training, default: 20)
+- `--num_layers`: Number of GRU layers (must match training, default: 2)
+- `--dropout`: Dropout rate (must match training, default: 0.3)
+- `--output_csv`: Path to save results CSV (optional)
+
+The inference will output a CSV file with columns: `sequence` and `probability`, where probability indicates the model's confidence that the sequence is a phosphopeptide.
 
 ## DDA
 
