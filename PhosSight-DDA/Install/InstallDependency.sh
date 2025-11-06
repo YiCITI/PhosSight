@@ -3,16 +3,16 @@
 echo "Installing..."
 
 ##Parameter path
-#DeepRescore2Path="E:/Project/DeepRescore2/Github/DeepRescore2"
+#PhosSightPath="E:/Project/PhosSight/Github/PhosSight"
 #anacondaPath="/C/ProgramData/anaconda3"
-#scriptPath="$DeepRescore2Path/Script"
+#scriptPath="$PhosSightPath/Script"
 
 
 if [ -n "$1" ]; then
-    DeepRescore2Path="$1"
-    echo "DeepRescore2Path: $DeepRescore2Path"
+    PhosSightPath="$1"
+    echo "PhosSightPath: $PhosSightPath"
 else
-    echo "Please give DeepRescore2Path"
+    echo "Please give PhosSightPath"
     exit 1
 fi
 
@@ -24,7 +24,7 @@ else
     exit 2
 fi
 
-scriptPath="$DeepRescore2Path/Script"
+scriptPath="$PhosSightPath/Script"
 
 # Prepare conda for non-interactive usage and prefer conda-forge to avoid Anaconda TOS prompts
 if [ -f "$anacondaPath/etc/profile.d/conda.sh" ]; then
@@ -37,29 +37,29 @@ fi
 #====================================Download==========================================#
 ##1. AutoRT
 
-if [ ! -d "$DeepRescore2Path/Script/AutoRT" ]; then
+if [ ! -d "$PhosSightPath/Script/AutoRT" ]; then
     git clone https://github.com/bzhanglab/AutoRT.git
-    mv AutoRT $DeepRescore2Path/Script
+    mv AutoRT $PhosSightPath/Script
 fi
 
 ##2. pDeep3
-if [ ! -d "$DeepRescore2Path/Script/pDeep3" ]; then
+if [ ! -d "$PhosSightPath/Script/pDeep3" ]; then
     git clone https://github.com/pFindStudio/pDeep3.git
-    mv pDeep3 $DeepRescore2Path/Script/pDeep3
+    mv pDeep3 $PhosSightPath/Script/pDeep3
 fi
 
 ##3. PhosphoRS
-if [ ! -d "$DeepRescore2Path/Script/PhosphoRS" ]; then
+if [ ! -d "$PhosSightPath/Script/PhosphoRS" ]; then
     curl -o phosphoRS-cli.zip -LJ https://github.com/lmsac/phosphoRS-cli/releases/download/v1.0.0/phosphoRS-cli.zip
     unzip phosphoRS-cli.zip -d phosphoRS-cli
-    mv phosphoRS-cli $DeepRescore2Path/Script/PhosphoRS
+    mv phosphoRS-cli $PhosSightPath/Script/PhosphoRS
     rm -f phosphoRS-cli.zip
 fi
 
 ##4. SpectralEntropy
-if [ ! -d "$DeepRescore2Path/Script/SpectralEntropy" ]; then
+if [ ! -d "$PhosSightPath/Script/SpectralEntropy" ]; then
     git clone https://github.com/YuanyueLi/SpectralEntropy.git
-    mv SpectralEntropy $DeepRescore2Path/Script/SpectralEntropy
+    mv SpectralEntropy $PhosSightPath/Script/SpectralEntropy
 fi
 
 #=====================================Install==========================================#
@@ -159,7 +159,7 @@ if conda env list | grep -q $r_env; then
     echo "R_env environment already exists."
 else
     echo "Creating R_env environment..."
-    conda env create -f $DeepRescore2Path/Install/environment_R.yml --prefix $anacondaPath/envs/R_env
+    conda env create -f $PhosSightPath/Install/environment_R.yml --prefix $anacondaPath/envs/R_env
 
     echo "R_env environment created and activated."
 fi
