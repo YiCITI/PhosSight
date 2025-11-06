@@ -252,16 +252,16 @@ PhosSight-DDA
 
 1. Install [Git](https://git-scm.com/downloads), [Docker](https://docs.docker.com/install/) and [Anaconda](https://www.anaconda.com/download) on Windows Platform.
 2. Clone the repository:
-    ```shell
-    git clone https://github.com/YiCITI/PhosSight.git
-    cd PhosSight
-    ```
+   ```shell
+   git clone https://github.com/YiCITI/PhosSight.git
+   cd PhosSight
+   ```
 3. Install the required packages and dependencies:
-    ```shell
-    cd PhosSight-DDA/Install
-    # use Git Bash to run the script below!!!
-    bash InstallDependency.sh  # run the script to install all dependencies or run step by step manually
-    ```
+   ```shell
+   cd PhosSight-DDA/Install
+   # use Git Bash to run the script below!!!
+   bash InstallDependency.sh  # run the script to install all dependencies or run step by step manually
+   ```
 4. Download the datasets from [Zenodo](https://zenodo.org/records/10049730)
 5. Modify the parameter files in `Parameters/` and run the `Script/PhosSight.sh` script:
    ```shell
@@ -434,19 +434,19 @@ java -Xmx100g -jar ./Script/GenerateFeatureMatrix/PDV-1.6.1.beta.features-jar-wi
 
 Each column of the parameter file is described as follows (Please change the 'Value' column based on your data):
 
-| Name             | Value            | Description                                                                                                                                         |
-| ---------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| PhosSightPath | PhosSight_DIR | PhosSight directory                                                                                                                              |
-| anacondaPath     | ANACONDA_DIR     | Anaconda directory. Default is /C/ProgramData/anaconda3                                                                                             |
-| decoyPrefix      | DECOY_PREFIX     | Decoy prefix used for searching. Default is XXX_                                                                                                    |
-| searchEngine     | SEARCH_ENGINE    | Four search engines, msgf, comet, xtandem, maxquant, are supported                                                                                  |
-| rawSpectraPath   | RAW_DIR          | Path to the MS/MS spectra (RAW) directory                                                                                                           |
-| spectraPath      | MGF_DIR          | Path to the MS/MS spectra (MGF) directory                                                                                                           |
-| inputFeaturePath | FEATURE_DIR      | Path to the feature matrix                                                                                                                          |
-| outputPath       | OUT_DIR          | Output directory                                                                                                                                    |
-| VariableMods     | VAR_MOD          | Variable modifications used for searching, e.g. '1,Oxidation,M,15.994919,1;2,Phospho,S,79.966331,2;3,Phospho,T,79.966331,2;4,Phospho,Y,79.966331,2' |
-| FixedMods        | Fix_MOD          | Fixed modifications used for searching, e.g. '5,Carbamidomethyl,C,57.021464,3'. If null, use 'null'                                                 |
-| ModsReplace      | RENAME_MOD       | Some modifications need to rename, e.g. '[79.966331],Phospho'. If null, use 'null'                                                                  |
+| Name             | Value         | Description                                                                                                                                         |
+| ---------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| PhosSightPath    | PhosSight_DIR | PhosSight directory                                                                                                                                 |
+| anacondaPath     | ANACONDA_DIR  | Anaconda directory. Default is /C/ProgramData/anaconda3                                                                                             |
+| decoyPrefix      | DECOY_PREFIX  | Decoy prefix used for searching. Default is XXX_                                                                                                    |
+| searchEngine     | SEARCH_ENGINE | Four search engines, msgf, comet, xtandem, maxquant, are supported                                                                                  |
+| rawSpectraPath   | RAW_DIR       | Path to the MS/MS spectra (RAW) directory                                                                                                           |
+| spectraPath      | MGF_DIR       | Path to the MS/MS spectra (MGF) directory                                                                                                           |
+| inputFeaturePath | FEATURE_DIR   | Path to the feature matrix                                                                                                                          |
+| outputPath       | OUT_DIR       | Output directory                                                                                                                                    |
+| VariableMods     | VAR_MOD       | Variable modifications used for searching, e.g. '1,Oxidation,M,15.994919,1;2,Phospho,S,79.966331,2;3,Phospho,T,79.966331,2;4,Phospho,Y,79.966331,2' |
+| FixedMods        | Fix_MOD       | Fixed modifications used for searching, e.g. '5,Carbamidomethyl,C,57.021464,3'. If null, use 'null'                                                 |
+| ModsReplace      | RENAME_MOD    | Some modifications need to rename, e.g. '[79.966331],Phospho'. If null, use 'null'                                                                  |
 
 As a reference, we prepared 9 parameter files for the three test datasets of four search engines used in our manuscript, including label free dataset (PRIDE ID: PXD000138 and PXD023665) and UCEC TMT dataset, respectively. Please check the 'PhosSight/Parameters' folder.
 

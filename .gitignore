@@ -4,8 +4,8 @@
 PhosSight-DDA/Parameters/*_PhosSight.param
 PhosSight-DDA/Script/AutoRT/
 PhosSight-DDA/Script/pDeep3/pDeep3/
+PhosSight-DDA/Script/pDeep3/SpectralEntropy/
 PhosSight-DDA/Script/PhosphoRS/phosphoRS-cli/
 PhosSight-DDA/Script/SpectralEntropy/
 PhosSight-DDA/Script/temp/
-PhosSight-DDA/Script/PhosSight.sh
 
