@@ -20,6 +20,7 @@
       - [Quantification for TMT dataset](#quantification-for-tmt-dataset)
       - [Kinase activity score inference](#kinase-activity-score-inference)
   - [DIA](#dia)
+    - [Files Structure](#files-structure-2)
   - [Contact](#contact)
   - [Acknowledgements](#acknowledgements)
   - [References](#references)
@@ -489,6 +490,15 @@ In our manuscript, we used [MASCI](https://github.com/PNNL-Comp-Mass-Spec/MASIC)
 In our manuscript, we performed kinase activity score inference for the HCC datasets. We prepared the original scripts we used under the 'Script/KinaseActivityScoreInference' folder. The excel file ('mmc4.xlsx') contains the list of known targets that we used for the inference. You can change the input data path and parameters to do the kinase activity score inference.
 
 ## DIA
+
+### Files Structure
+
+```
+PhosSight-DIA
+|--- spec_parquet_filter    # Filter the spectral library in parquet format
+|--- Script                 # Scripts for PhosSight-DIAs
+|     |--- PhosSight.sh     # Main script for PhosSight-DIA pipeline
+```
 
 Coming soon...
 
