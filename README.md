@@ -493,10 +493,12 @@ In our manuscript, we performed kinase activity score inference for the HCC data
 
 ### Files Structure
 
+```
 PhosSight-DIA
 |--- spec_parquet_filter    # Filter the spectral library in parquet format
-|--- Script
+|--- Script                 # Scripts for PhosSight-DIAs
 |     |--- PhosSight.sh     # Main script for PhosSight-DIA pipeline
+```
 
 Coming soon...
 
