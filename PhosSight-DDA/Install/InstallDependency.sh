@@ -72,7 +72,7 @@ if conda env list | grep -q $autort_env; then
     echo "AutoRT environment already exists."
 else
     echo "Creating AutoRT environment..."
-    conda create -n AutoRT --override-channels -c conda-forge python=3.10 -y
+    conda create -n AutoRT --override-channels -c conda-forge python=3.8 -y
     echo "AutoRT environment created and activated."
 fi
 
