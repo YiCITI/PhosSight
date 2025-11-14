@@ -28,6 +28,13 @@ GREEN = "#3BA44D"   # Loss
 BLUE = "#2C5AA0"    # Shared
 ORANGE = "#F2A124"  # Gain
 FRAME_COLOR = "#D8D8D8"
+FONT_FAMILY = "Arial"
+FONT_SIZE = 14
+
+plt.rcParams.update({
+    "font.family": FONT_FAMILY,
+    "font.size": FONT_SIZE,
+})
 
 
 def _comma(x, pos):
@@ -102,7 +109,7 @@ def plot_vertical_bars(df: pd.DataFrame, title: str, output: str):
     bar_gain = ax.bar(x, normalized_gain, width=bar_width, bottom=normalized_shared, color=ORANGE, edgecolor="black", linewidth=0.5)
 
     # Annotate numbers centered within a section (used for Shared)
-    def annotate_stack(bar_container, values, offset_factor=0.5, direction=0, color="black", fontsize=12):
+    def annotate_stack(bar_container, values, offset_factor=0.5, direction=0, color="black", fontsize=FONT_SIZE):
         for rect, val in zip(bar_container, values):
             height = rect.get_height()
             x_center = rect.get_x() + rect.get_width() / 2
@@ -122,7 +129,7 @@ def plot_vertical_bars(df: pd.DataFrame, title: str, output: str):
             )
 
     # Annotate outside the bar: position='top' or 'bottom'
-    def annotate_outside(bar_container, values, position="top", color="black", fontsize=12):
+    def annotate_outside(bar_container, values, position="top", color="black", fontsize=FONT_SIZE):
         # margin based on overall scale
         pos_max = max((normalized_shared + normalized_gain).max(), 1)
         neg_max = max(normalized_loss.max(), 1)
@@ -162,7 +169,7 @@ def plot_vertical_bars(df: pd.DataFrame, title: str, output: str):
     ax.set_ylim(-30, 150)  # 150 / 180
 
     # Title and legend
-    ax.set_title(title, fontsize=12, fontweight="bold")
+    ax.set_title(title, fontsize=FONT_SIZE, fontweight="bold")
     legend_handles = [
         plt.Rectangle((0, 0), 1, 1, color=GREEN, ec="black", lw=0.5, label="Loss"),
         plt.Rectangle((0, 0), 1, 1, color=BLUE, ec="black", lw=0.5, label="Shared"),
