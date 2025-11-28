@@ -3,6 +3,7 @@ import pyarrow.compute as pc
 import pyarrow as pa # Added for pa.array and pa.string()
 from tqdm import tqdm
 import os
+from Bio import SeqIO
 
 
 
@@ -72,18 +73,105 @@ def _read_and_process_peptides_from_txt(txt_peptide_file_path: str) -> set[str]:
 
                 processed_peptides_set.add(modified_peptide)
 
-        if not processed_peptides_set:
-            # This message might be better handled by the caller, but kept for consistency with original logic
-            print("Info: No peptides were processed from the TXT file, or the file was empty.")
-
     except FileNotFoundError:
         print(f"Error: TXT peptide file not found at {txt_peptide_file_path}")
-        return set() # Return an empty set on error
+        return set()
     except Exception as e:
         print(f"Error reading or processing TXT peptide file: {e}")
-        return set() # Return an empty set on error
+        return set()
     
     return processed_peptides_set
+
+
+def _read_and_process_peptides_from_fasta(fasta_peptide_file_path: str) -> set[str]:
+    """
+    Reads peptides from a FASTA file, processes them, and returns a set of modified sequences.
+
+    Args:
+        fasta_peptide_file_path (str): Path to the input FASTA file with peptide sequences.
+        
+    Returns:
+        set[str]: A set of unique processed peptide sequences.
+                  Returns an empty set if the file is not found or an error occurs.
+    """
+    processed_peptides_set = set()
+    print(f"Processing peptides from FASTA: {fasta_peptide_file_path}")
+    try:
+        # Use Biopython SeqIO to iterate over FASTA records
+        for rec_idx, record in enumerate(tqdm(SeqIO.parse(fasta_peptide_file_path, "fasta"), desc="Processing FASTA peptides"), start=1):
+            original_peptide = str(record.seq).strip()
+            if not original_peptide:
+                continue
+
+            modified_peptide, phospho_sites = process_peptide_to_modified_sequence(original_peptide)
+            if phospho_sites > 1:
+                print(f"Warning: Peptide '{original_peptide}' (record {rec_idx}) has {phospho_sites} phosphorylation sites. Skipped.")
+                continue
+
+            processed_peptides_set.add(modified_peptide)
+
+    except FileNotFoundError:
+        print(f"Error: FASTA peptide file not found at {fasta_peptide_file_path}")
+        return set()
+    except Exception as e:
+        print(f"Error reading or processing FASTA peptide file: {e}")
+        return set()
+
+    return processed_peptides_set
+
+
+def _filter_parquet_by_peptide_set(
+    peptide_set: set[str],
+    input_parquet_path: str,
+    output_parquet_path: str,
+    parquet_col_to_filter: str = "Modified.Sequence"
+):
+    """
+    Filters a Parquet file based on a set of processed peptides, saving the result.
+
+    Args:
+        peptide_set (set[str]): Set of processed peptide sequences.
+        input_parquet_path (str): Path to the input Parquet spectral library.
+        output_parquet_path (str): Path to save the filtered Parquet data.
+        parquet_col_to_filter (str): Column name in Parquet to filter on.
+    """
+    if not peptide_set:
+        print("Error: Peptide set is empty. Cannot proceed with Parquet filtering based on an empty list.")
+        return
+
+    print(f"Total unique processed peptide sequences for filtering: {len(peptide_set)}")
+
+    try:
+        table = pq.read_table(input_parquet_path)
+        print(f"Read Parquet file: {input_parquet_path} with {len(table)} rows.")
+
+        if parquet_col_to_filter not in table.column_names:
+            raise KeyError(f"Error: Column '{parquet_col_to_filter}' not found in Parquet file. Available columns: {table.column_names}")
+
+        sequences_in_parquet = table[parquet_col_to_filter]
+
+        # Convert the set of peptides to a PyArrow Array for pc.is_in
+        value_set_array = pa.array(list(peptide_set), type=pa.string())
+        mask = pc.is_in(sequences_in_parquet, value_set=value_set_array)
+        filtered_table = table.filter(mask)
+        
+        # Ensure output directory exists
+        output_dir = os.path.dirname(output_parquet_path)
+        if output_dir and not os.path.exists(output_dir):
+            os.makedirs(output_dir, exist_ok=True)
+            print(f"Created output directory: {output_dir}")
+        
+        pq.write_table(filtered_table, output_parquet_path)
+        print(f"Filtering complete. Output saved to: {output_parquet_path}")
+        print(f"Original Parquet row count: {len(table)}")
+        print(f"Filtered Parquet row count: {len(filtered_table)}")
+
+    except FileNotFoundError:
+        print(f"Error: Input Parquet file not found at {input_parquet_path}")
+    except PermissionError:
+        print(f"Error: Permission denied when writing to {output_parquet_path}")
+    except Exception as e:
+        print(f"Error processing Parquet file: {e}")
 
 
 def filter_parquet_by_peptide_list(
@@ -105,46 +193,42 @@ def filter_parquet_by_peptide_list(
     """
     processed_peptides_set = _read_and_process_peptides_from_txt(txt_peptide_file_path)
 
-    if not processed_peptides_set:
-        print("Error: Peptide list is empty (e.g., file not found, file empty, or error during processing). Cannot proceed with Parquet filtering based on an empty list.")
-        return
+    _filter_parquet_by_peptide_set(
+        peptide_set=processed_peptides_set,
+        input_parquet_path=input_parquet_path,
+        output_parquet_path=output_parquet_path,
+        parquet_col_to_filter=parquet_col_to_filter
+    )
+    
+    
+def filter_parquet_by_peptide_fasta(
+    fasta_peptide_file_path: str,
+    input_parquet_path: str,
+    output_parquet_path: str,
+    parquet_col_to_filter: str = "Modified.Sequence"
+):
+    """
+    Reads peptides from a FASTA file, processes them for UniMod:21 (phosphorylation) 
+    modifications and UniMod:4 (carbamidomethylation) modifications,
+    then filters a Parquet file based on these processed peptides, saving the result.
 
-    print(f"Total unique processed peptide sequences for filtering: {len(processed_peptides_set)}")
+    Args:
+        fasta_peptide_file_path (str): Path to the input FASTA file with peptide sequences.
+        input_parquet_path (str): Path to the input Parquet spectral library.
+        output_parquet_path (str): Path to save the filtered Parquet data.
+        parquet_col_to_filter (str): Column name in Parquet to filter on.
+    """
+    processed_peptides_set = _read_and_process_peptides_from_fasta(fasta_peptide_file_path)
 
-    try:
-        table = pq.read_table(input_parquet_path)
-        print(f"Read Parquet file: {input_parquet_path} with {len(table)} rows.")
-
-        if parquet_col_to_filter not in table.column_names:
-            raise KeyError(f"Error: Column '{parquet_col_to_filter}' not found in Parquet file. Available columns: {table.column_names}")
-
-        sequences_in_parquet = table[parquet_col_to_filter]
-
-        # Convert the set of peptides to a PyArrow Array for pc.is_in
-        value_set_array = pa.array(processed_peptides_set, type=pa.string())
-        mask = pc.is_in(sequences_in_parquet, value_set=value_set_array)
-        filtered_table = table.filter(mask)
+    _filter_parquet_by_peptide_set(
+        peptide_set=processed_peptides_set,
+        input_parquet_path=input_parquet_path,
+        output_parquet_path=output_parquet_path,
+        parquet_col_to_filter=parquet_col_to_filter
+)
+    
         
-        # Ensure output directory exists
-        output_dir = os.path.dirname(output_parquet_path)
-        if output_dir and not os.path.exists(output_dir):
-            os.makedirs(output_dir, exist_ok=True)
-            print(f"Created output directory: {output_dir}")
-        
-        pq.write_table(filtered_table, output_parquet_path)
-        print(f"Filtering complete. Output saved to: {output_parquet_path}")
-        print(f"Original Parquet row count: {len(table)}")
-        print(f"Filtered Parquet row count: {len(filtered_table)}")
-
-    except FileNotFoundError:
-        print(f"Error: Input Parquet file not found at {input_parquet_path}")
-    except PermissionError:
-        print(f"Error: Permission denied when writing to {output_parquet_path}")
-    except Exception as e:
-        print(f"Error processing Parquet file: {e}")
-        
-        
-def filter_syn_pep_in_parquet_by_peptide_list(
+def exclude_syn_pep_variants_in_parquet_by_peptide_list(
     txt_syn_pep_file_path: str,
     input_parquet_path: str,
     output_parquet_path: str,

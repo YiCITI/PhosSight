@@ -6,18 +6,19 @@ import os
 # spec_lib_dir = Path("~/PhosSight_analysis/spec_lib/JPST000859").expanduser()
 # fasta_dir = Path("~/PhosSight_analysis/data/derivedfasta/JPST000859").expanduser()
 
-def step1_generate_original_parquet(spec_lib_dir: Path):
+def step1_generate_original_parquet(spec_lib_dir: Path, fasta_dir: Path):
     """Generate the original parquet file from the input data.
 
     Args:
         spec_lib_dir: Path to the spectral library directory
+        fasta_dir: Path to the fasta/peptide lists directory
     """
-    from filter_parquet.filter_parquet_using_pep_list import filter_syn_pep_in_parquet_by_peptide_list
+    from filter_parquet.filter_parquet_using_pep_list import exclude_syn_pep_variants_in_parquet_by_peptide_list
 
-    txt_file_syn_pep = Path(spec_lib_dir) / "syn_pep_STY.txt"
+    txt_file_syn_pep = Path(fasta_dir) / "syn_pep_STY.txt"
     parquet_in = Path(spec_lib_dir) / "spectral-library-all.parquet"
     parquet_out_original = Path(spec_lib_dir) / "spec_library_original.parquet"
-    filter_syn_pep_in_parquet_by_peptide_list(
+    exclude_syn_pep_variants_in_parquet_by_peptide_list(
         txt_syn_pep_file_path=txt_file_syn_pep,
         input_parquet_path=parquet_in,
         output_parquet_path=parquet_out_original
@@ -87,28 +88,20 @@ if __name__ == "__main__":
                        help='Step to run: 1=generate original parquet, 2=filter using pretrained model, 3=filter using finetuned model')
     parser.add_argument('--spec-lib-dir', type=str, required=True,
                         help='Path to spec lib dir (required)')
-    parser.add_argument('--fasta-dir', type=str, required=False,
+    parser.add_argument('--fasta-dir', type=str, required=True,
                         help='Path to fasta dir (required for steps 2 and 3)')
 
     args = parser.parse_args()
 
     # Convert to Path and expand ~. fasta_dir may be optional for step 1.
     spec_lib_dir = Path(args.spec_lib_dir).expanduser()
-    fasta_dir = Path(args.fasta_dir).expanduser() if args.fasta_dir else None
+    fasta_dir = Path(args.fasta_dir).expanduser()
     print(f"Using spec_lib_dir={spec_lib_dir}")
-    if fasta_dir:
-        print(f"Using fasta_dir={fasta_dir}")
-    else:
-        print("No fasta_dir provided (this is OK for step 1)")
-
-    # Validate required inputs for each step
-    if args.step in (2, 3) and not fasta_dir:
-        print("Error: --fasta-dir is required for steps 2 and 3.")
-        sys.exit(2)
+    print(f"Using fasta_dir={fasta_dir}")
 
     if args.step == 1:
         print("Running Step 1: Generate original parquet file")
-        step1_generate_original_parquet(spec_lib_dir)
+        step1_generate_original_parquet(spec_lib_dir, fasta_dir)
         print("Step 1 completed.")
     elif args.step == 2:
         print("Running Step 2: Generate filtered parquet using pretrained model")
