@@ -500,6 +500,18 @@ PhosSight-DIA
 |     |--- PhosSight.sh     # Main script for PhosSight-DIA pipeline
 ```
 
+### Prerequisites
+
+Before using PhosSight-DIA, please set up a Singularity container as recommended by DIA-NN. For detailed instructions, you can refer to the following official resources:
+
+DIA-NN's official documentation: [Official Setup Guide](https://github.com/vdemichev/DiaNN/?tab=readme-ov-file#installation)
+
+Recommended community guide: [Community Guide](https://github.com/vdemichev/DiaNN/issues/1202#issuecomment-2417108281)
+
+We recommend reviewing these links to ensure a correct installation.
+
+
+
 Coming soon...
 
 ## Contact
