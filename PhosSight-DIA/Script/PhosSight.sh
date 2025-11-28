@@ -9,10 +9,10 @@ CONDA_NO_PLUGINS=true
 # Set pathes
 
 anacondaPath=~/miniconda3
-syn_spec_lib_dir=~/PhosSight_analysis/spec_lib/JPST000859
-syn_fasta_dir=~/PhosSight_analysis/data/derivedfasta/JPST000859
-A549_spec_lib_dir=~/PhosSight_analysis/spec_lib/202503_A549_0h_24h
-A549_fasta_dir=~/PhosSight_analysis/data/derivedfasta/202503_A549_0h_24h
+syn_spec_lib_dir=~/PhosSight_analysis/temp/spec_lib/syn
+syn_fasta_dir=~/PhosSight_analysis/temp/data/derivedfasta/syn
+A549_spec_lib_dir=~/PhosSight_analysis/temp/spec_lib/A549
+A549_fasta_dir=~/PhosSight_analysis/temp/data/derivedfasta/A549
 
 # Create environment and install dependencies
 source $anacondaPath/etc/profile.d/conda.sh
@@ -25,6 +25,8 @@ pip install -r ../Install/requirements.txt
 # Generate peptide list from fasta for PhosDetect to predict detectability
 
 # Filter (or check) the original spectral library
+python ../spec_parquet_filter/filter_parquet_syn.py --step 1 --spec-lib-dir $syn_spec_lib_dir --fasta-dir $syn_fasta_dir
+python ../spec_parquet_filter/filter_parquet_A549.py --step 1 --spec-lib-dir $A549_spec_lib_dir --fasta-dir $A549_fasta_dir
 
 # Run small-scale library search experiments to generate training data for fine-tuning
 
