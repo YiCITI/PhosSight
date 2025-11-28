@@ -502,7 +502,7 @@ PhosSight-DIA
 
 ### Prerequisites
 
-Before using PhosSight-DIA, please set up a Singularity container as recommended by DIA-NN. For detailed instructions, you can refer to the following official resources:
+Before using PhosSight-DIA, please install Singularity and set up a Singularity container as recommended by DIA-NN. For detailed instructions, you can refer to the following official resources:
 
 DIA-NN's official documentation: [Official Setup Guide](https://github.com/vdemichev/DiaNN/?tab=readme-ov-file#installation)
 
