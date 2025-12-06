@@ -48,12 +48,17 @@ python $PhosSight_DIA_dir/spec_parquet_filter/filter_parquet_A549.py --step 1 --
 # Or just copy the original spectral library
 
 # ============================================================================================
+# Generate peptide list from fasta for PhosDetect to (filter original spectral library and) predict detectability
+# ============================================================================================
+python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_syn_4species.py --step 1 --work_dir $syn_fasta_dir
+python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_A549.py --step 1 --work_dir $A549_fasta_dir
+
+# ============================================================================================
 # Run DIA-NN spectral library search using original spectral libraries to generate baseline results
+# ============================================================================================
 
 
 # Run small-scale library search experiments to generate training data for fine-tuning
-
-# Generate peptide list from fasta for PhosDetect to predict detectability
 
 # Score detectability of theoretical spectra using PhosDetect
 
