@@ -80,16 +80,6 @@ def step2_filter_by_pretrained_model(work_dir):
             output_txt_file=path.join(work_dir, 'for_filter_spec_lib_parquet_pretrained', f'filtered_peptides_pretrained_ratio_{ratio}.txt'),
             ratio_to_keep=ratio
         )
-        
-    score_set = [0.55, 0.6, 0.65]
-    for score in score_set:
-        print(f"Filtering database peptides based on the provided list with score threshold {score}...")
-        filter_peptides_above_thres(
-            peptides_list_file_for_filtering=path.join(work_dir, 'peptide_scores_pretrained.txt'),
-            all_peptides_fasta_file=path.join(work_dir, 'combined_syn_yeast_ecoli_castor_original.fasta'),
-            output_txt_file=path.join(work_dir, 'for_filter_spec_lib_parquet_pretrained', f'filtered_peptides_pretrained_score_{score}.txt'),
-            score_threshold=score
-        )
     
     print("Step 2 completed! Please check the generated pre-trained model filtering results, then run step 3.")
 
@@ -111,16 +101,6 @@ def step3_filter_by_finetuned_model(work_dir):
             all_peptides_fasta_file=path.join(work_dir, 'combined_syn_yeast_ecoli_castor_original.fasta'),
             output_txt_file=path.join(work_dir, 'for_filter_spec_lib_parquet_finetuned', f'filtered_peptides_finetuned_ratio_{ratio}.txt'),
             ratio_to_keep=ratio
-        )
-        
-    score_set = [0.1, 0.2, 0.5, 0.7, 0.9]
-    for score in score_set:
-        print(f"Filtering database peptides based on the provided list with score threshold {score}...")
-        filter_peptides_above_thres(
-            peptides_list_file_for_filtering=path.join(work_dir, 'peptide_scores_finetuned.txt'),
-            all_peptides_fasta_file=path.join(work_dir, 'combined_syn_yeast_ecoli_castor_original.fasta'),
-            output_txt_file=path.join(work_dir, 'for_filter_spec_lib_parquet_finetuned', f'filtered_peptides_finetuned_score_{score}.txt'),
-            score_threshold=score
         )
     
     print("Step 3 completed! All steps have been completed.")
