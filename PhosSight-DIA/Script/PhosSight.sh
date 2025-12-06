@@ -41,17 +41,17 @@ singularity exec $diann_singularity_img_path $diann_executable_path --lib  --thr
 singularity exec $diann_singularity_img_path $diann_executable_path --lib $A549_spec_lib_dir/report-lib.predicted.speclib --threads 32 --verbose 1 --out $A549_spec_lib_dir/report.parquet --qvalue 0.01 --matrices --temp $A549_spec_lib_dir --out-lib $A549_spec_lib_dir/spectral-library-all.parquet --gen-spec-lib --unimod4 --var-mods 1 --var-mod UniMod:21,79.966331,STY --window 10 --mass-acc 10 --mass-acc-ms1 4 --peptidoforms --rt-profiling
 
 # ============================================================================================
+# Generate peptide list from fasta for PhosDetect to (filter original spectral library and) predict detectability
+# ============================================================================================
+python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_syn_4species.py --step 1 --work_dir $syn_fasta_dir
+python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_A549.py --step 1 --work_dir $A549_fasta_dir
+
+# ============================================================================================
 # Filter (or check) the original spectral library
 # ============================================================================================
 python $PhosSight_DIA_dir/spec_parquet_filter/filter_parquet_syn.py --step 1 --spec-lib-dir $syn_spec_lib_dir --fasta-dir $syn_fasta_dir
 python $PhosSight_DIA_dir/spec_parquet_filter/filter_parquet_A549.py --step 1 --spec-lib-dir $A549_spec_lib_dir --fasta-dir $A549_fasta_dir
 # Or just copy the original spectral library
-
-# ============================================================================================
-# Generate peptide list from fasta for PhosDetect to (filter original spectral library and) predict detectability
-# ============================================================================================
-python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_syn_4species.py --step 1 --work_dir $syn_fasta_dir
-python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_A549.py --step 1 --work_dir $A549_fasta_dir
 
 # ============================================================================================
 # Run DIA-NN spectral library search using original spectral libraries to generate baseline results
@@ -78,7 +78,10 @@ python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_A549.py --step 2
 python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_syn_4species.py --step 3 --work_dir $syn_fasta_dir
 python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_A549.py --step 3 --work_dir $A549_fasta_dir
 
+# =============================================================================================
 # Run DIA-NN spectral library search (spectral libraries filtered by pretrained model and fine-tuned model)
+# =============================================================================================
+
 
 # Analyze DIA-NN results to evaluate the effectiveness of PhosDetect
 
