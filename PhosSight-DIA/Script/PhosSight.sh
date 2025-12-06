@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 export PYTHONUTF8=1
 export PYTHONIOENCODING=utf-8
@@ -16,15 +17,18 @@ anacondaPath=~/miniconda3
 diann_singularity_img_path=~/diann-2.2.0/diann-2.2.0.img
 diann_executable_path=~/diann-2.2.0/diann-linux
 syn_spec_lib_dir=~/PhosSight_analysis/temp/spec_lib/syn
-syn_fasta_dir=~/PhosSight_analysis/temp/data/derivedfasta/syn
+syn_fasta_dir=~/PhosSight_analysis/temp/database/syn
+syn_result_dir=~/PhosSight_analysis/temp/result/syn
 A549_spec_lib_dir=~/PhosSight_analysis/temp/spec_lib/A549
-A549_fasta_dir=~/PhosSight_analysis/temp/data/derivedfasta/A549
+A549_fasta_dir=~/PhosSight_analysis/temp/database/A549
+A549_result_dir=~/PhosSight_analysis/temp/result/A549
+PhosSight_DIA_dir=~/github_repo/PhosSight/PhosSight-DIA/
 
 # Create environment and install dependencies
 source $anacondaPath/etc/profile.d/conda.sh
 conda create -n PhosSight_DIA python=3.13.2 -y
 conda activate PhosSight_DIA
-pip install -r ../Install/requirements.txt
+pip install -r $PhosSight_DIA_dir/Install/requirements.txt
 
 # ============================================================================================
 # Predict theoretical spectra using DIA-NN's built-in theoretical spectrum prediction function
@@ -36,11 +40,14 @@ singularity exec $diann_singularity_img_path $diann_executable_path --lib $syn_s
 singularity exec $diann_singularity_img_path $diann_executable_path --lib  --threads 32 --verbose 1 --out $A549_spec_lib_dir/report.parquet --qvalue 0.01 --matrices --temp $A549_spec_lib_dir --out-lib $A549_spec_lib_dir/report-lib.parquet --gen-spec-lib --predictor --fasta $A549_fasta_dir/uniprotkb_proteome_UP000005640_2025_09_25.fasta --fasta-search --min-fr-mz 200 --max-fr-mz 1800 --met-excision --min-pep-len 7 --max-pep-len 46 --min-pr-mz 350 --max-pr-mz 1650 --min-pr-charge 1 --max-pr-charge 4 --cut K*,R* --missed-cleavages 1 --unimod4 --var-mods 1 --var-mod UniMod:21,79.966331,STY --window 10 --mass-acc 10 --mass-acc-ms1 4 --peptidoforms --rt-profiling
 singularity exec $diann_singularity_img_path $diann_executable_path --lib $A549_spec_lib_dir/report-lib.predicted.speclib --threads 32 --verbose 1 --out $A549_spec_lib_dir/report.parquet --qvalue 0.01 --matrices --temp $A549_spec_lib_dir --out-lib $A549_spec_lib_dir/spectral-library-all.parquet --gen-spec-lib --unimod4 --var-mods 1 --var-mod UniMod:21,79.966331,STY --window 10 --mass-acc 10 --mass-acc-ms1 4 --peptidoforms --rt-profiling
 
+# ============================================================================================
 # Filter (or check) the original spectral library
-python ../spec_parquet_filter/filter_parquet_syn.py --step 1 --spec-lib-dir $syn_spec_lib_dir --fasta-dir $syn_fasta_dir
-python ../spec_parquet_filter/filter_parquet_A549.py --step 1 --spec-lib-dir $A549_spec_lib_dir --fasta-dir $A549_fasta_dir
+# ============================================================================================
+python $PhosSight_DIA_dir/spec_parquet_filter/filter_parquet_syn.py --step 1 --spec-lib-dir $syn_spec_lib_dir --fasta-dir $syn_fasta_dir
+python $PhosSight_DIA_dir/spec_parquet_filter/filter_parquet_A549.py --step 1 --spec-lib-dir $A549_spec_lib_dir --fasta-dir $A549_fasta_dir
 # Or just copy the original spectral library
 
+# ============================================================================================
 # Run DIA-NN spectral library search using original spectral libraries to generate baseline results
 
 
