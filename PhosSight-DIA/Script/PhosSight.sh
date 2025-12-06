@@ -56,8 +56,8 @@ python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_A549.py --step 1
 # ============================================================================================
 # Run DIA-NN spectral library search using original spectral libraries to generate baseline results
 # ============================================================================================
-python $PhosSight_DIA_dir/Script/run_diann_syn.py --step original --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/syn --spec_lib_dir $syn_spec_lib_dir
-python $PhosSight_DIA_dir/Script/run_diann_A549.py --step original --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/A549 --spec_lib_dir $A549_spec_lib_dir
+# python $PhosSight_DIA_dir/Script/run_diann_syn.py --step original --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/syn --spec_lib_dir $syn_spec_lib_dir
+python $PhosSight_DIA_dir/Script/run_diann_A549.py --step original --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/A549 --spec_lib_dir $A549_spec_lib_dir
 
 # Run small-scale library search experiments to generate training data for fine-tuning
 
