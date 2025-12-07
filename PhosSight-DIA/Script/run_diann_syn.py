@@ -79,10 +79,8 @@ def batch_run_diann_pretrained_filtered(
     diann_cmd_prefix: str
 ):
     ratio_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    score_list = [0.55, 0.6, 0.65]
     ratio_suffix = [f'ratio_{r}' for r in ratio_list]
-    score_suffix = [f'score_{s}' for s in score_list]
-    suffix = ratio_suffix + score_suffix
+    suffix = ratio_suffix
 
     for suf in suffix:
         final_output_dir = output_dir / f"pretrained_{suf}"
@@ -120,11 +118,8 @@ def batch_run_diann_finetuned_filtered(
     diann_cmd_prefix: str
 ):
     ratio_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    score_list = [0.1, 0.2, 0.5, 0.7, 0.9]
     ratio_suffix = [f'ratio_{r}' for r in ratio_list]
-    score_suffix = [f'score_{s}' for s in score_list]
-    suffix = ratio_suffix + score_suffix
-
+    suffix = ratio_suffix
     for suf in suffix:
         final_output_dir = output_dir / f"finetuned_{suf}"
         if not os.path.exists(final_output_dir):
