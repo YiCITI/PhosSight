@@ -116,6 +116,7 @@ fi
 
 conda activate pDeep3
 python --version
+pip install -e $DeepRescore2Path/Script/pDeep3/pDeep3
 conda deactivate
 
 ##3.Phossight
