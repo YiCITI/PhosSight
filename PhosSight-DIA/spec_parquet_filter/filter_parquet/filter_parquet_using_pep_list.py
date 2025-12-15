@@ -97,8 +97,14 @@ def _read_and_process_peptides_from_fasta(fasta_peptide_file_path: str) -> set[s
     processed_peptides_set = set()
     print(f"Processing peptides from FASTA: {fasta_peptide_file_path}")
     try:
+        def count_fasta_records(file_path):
+            with open(file_path, 'r') as f:
+                return sum(1 for line in f if line.startswith('>'))
+        total_records = count_fasta_records(fasta_peptide_file_path)
+        
         # Use Biopython SeqIO to iterate over FASTA records
-        for rec_idx, record in enumerate(tqdm(SeqIO.parse(fasta_peptide_file_path, "fasta"), desc="Processing FASTA peptides"), start=1):
+        fasta_peptide = SeqIO.parse(fasta_peptide_file_path, "fasta")
+        for rec_idx, record in enumerate(tqdm(fasta_peptide, desc="Processing FASTA peptides", total=total_records), start=1):
             original_peptide = str(record.seq).strip()
             if not original_peptide:
                 continue
