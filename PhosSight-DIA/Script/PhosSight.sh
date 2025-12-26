@@ -23,6 +23,7 @@ A549_spec_lib_dir=~/PhosSight_analysis/temp/spec_lib/A549
 A549_fasta_dir=~/PhosSight_analysis/temp/database/A549
 A549_result_dir=~/PhosSight_analysis/temp/result/A549
 PhosSight_DIA_dir=~/github_repo/PhosSight/PhosSight-DIA/
+analysis_dir=~/github_repo/PhosSight/PhosSight-DIA/Script/analysis/
 
 # Create environment and install dependencies
 source $anacondaPath/etc/profile.d/conda.sh
@@ -43,14 +44,14 @@ pip install -r $PhosSight_DIA_dir/Install/requirements.txt
 # # ============================================================================================
 # # Generate peptide list from fasta for PhosDetect to (filter original spectral library and) predict detectability
 # # ============================================================================================
-# python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_syn_4species.py --step 1 --work_dir $syn_fasta_dir
-# python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_A549.py --step 1 --work_dir $A549_fasta_dir
+# python $PhosSight_DIA_dir/Script/generate_pep_fasta/generate_pep_fasta_syn_4species.py --step 1 --work_dir $syn_fasta_dir
+# python $PhosSight_DIA_dir/Script/generate_pep_fasta/generate_pep_fasta_A549.py --step 1 --work_dir $A549_fasta_dir
 
 # # ============================================================================================
 # # Filter (or check) the original spectral library
 # # ============================================================================================
-# python $PhosSight_DIA_dir/spec_parquet_filter/filter_parquet_syn.py --step 1 --spec-lib-dir $syn_spec_lib_dir --fasta-dir $syn_fasta_dir
-# python $PhosSight_DIA_dir/spec_parquet_filter/filter_parquet_A549.py --step 1 --spec-lib-dir $A549_spec_lib_dir --fasta-dir $A549_fasta_dir
+# python $PhosSight_DIA_dir/Script/spec_parquet_filter/filter_parquet_syn.py --step 1 --spec-lib-dir $syn_spec_lib_dir --fasta-dir $syn_fasta_dir
+# python $PhosSight_DIA_dir/Script/spec_parquet_filter/filter_parquet_A549.py --step 1 --spec-lib-dir $A549_spec_lib_dir --fasta-dir $A549_fasta_dir
 # # Or just copy the original spectral library
 
 # # ============================================================================================
@@ -74,24 +75,28 @@ pip install -r $PhosSight_DIA_dir/Install/requirements.txt
 # # Filter the spectral library to generate spectral library for DIA analysis
 # # =============================================================================================
 # # For pretrained model
-# python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_syn_4species.py --step 2 --work_dir $syn_fasta_dir
-# python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_A549.py --step 2 --work_dir $A549_fasta_dir
-# python $PhosSight_DIA_dir/spec_parquet_filter/filter_parquet_syn.py --step 2 --spec-lib-dir $syn_spec_lib_dir --fasta-dir $syn_fasta_dir
-# python $PhosSight_DIA_dir/spec_parquet_filter/filter_parquet_A549.py --step 2 --spec-lib-dir $A549_spec_lib_dir --fasta-dir $A549_fasta_dir
+# python $PhosSight_DIA_dir/Script/generate_pep_fasta/generate_pep_fasta_syn_4species.py --step 2 --work_dir $syn_fasta_dir
+# python $PhosSight_DIA_dir/Script/generate_pep_fasta/generate_pep_fasta_A549.py --step 2 --work_dir $A549_fasta_dir
+# python $PhosSight_DIA_dir/Script/spec_parquet_filter/filter_parquet_syn.py --step 2 --spec-lib-dir $syn_spec_lib_dir --fasta-dir $syn_fasta_dir
+# python $PhosSight_DIA_dir/Script/spec_parquet_filter/filter_parquet_A549.py --step 2 --spec-lib-dir $A549_spec_lib_dir --fasta-dir $A549_fasta_dir
 # # For fine-tuned model
-# python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_syn_4species.py --step 3 --work_dir $syn_fasta_dir
-# python $PhosSight_DIA_dir/generate_pep_fasta/generate_pep_fasta_A549.py --step 3 --work_dir $A549_fasta_dir
-# python $PhosSight_DIA_dir/spec_parquet_filter/filter_parquet_syn.py --step 3 --spec-lib-dir $syn_spec_lib_dir --fasta-dir $syn_fasta_dir
-# python $PhosSight_DIA_dir/spec_parquet_filter/filter_parquet_A549.py --step 3 --spec-lib-dir $A549_spec_lib_dir --fasta-dir $A549_fasta_dir
+# python $PhosSight_DIA_dir/Script/generate_pep_fasta/generate_pep_fasta_syn_4species.py --step 3 --work_dir $syn_fasta_dir
+# python $PhosSight_DIA_dir/Script/generate_pep_fasta/generate_pep_fasta_A549.py --step 3 --work_dir $A549_fasta_dir
+# python $PhosSight_DIA_dir/Script/spec_parquet_filter/filter_parquet_syn.py --step 3 --spec-lib-dir $syn_spec_lib_dir --fasta-dir $syn_fasta_dir
+# python $PhosSight_DIA_dir/Script/spec_parquet_filter/filter_parquet_A549.py --step 3 --spec-lib-dir $A549_spec_lib_dir --fasta-dir $A549_fasta_dir
 
 # # =============================================================================================
 # # Run DIA-NN spectral library search (spectral libraries filtered by pretrained model and fine-tuned model)
 # # =============================================================================================
 # python $PhosSight_DIA_dir/Script/run_diann_syn.py --step pretrained --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/syn --spec_lib_dir $syn_spec_lib_dir
-python $PhosSight_DIA_dir/Script/run_diann_A549.py --step pretrained --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/A549 --spec_lib_dir $A549_spec_lib_dir
-python $PhosSight_DIA_dir/Script/run_diann_syn.py --step finetuned --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/syn --spec_lib_dir $syn_spec_lib_dir
-python $PhosSight_DIA_dir/Script/run_diann_A549.py --step finetuned --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/A549 --spec_lib_dir $A549_spec_lib_dir
+# python $PhosSight_DIA_dir/Script/run_diann_A549.py --step pretrained --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/A549 --spec_lib_dir $A549_spec_lib_dir
+# python $PhosSight_DIA_dir/Script/run_diann_syn.py --step finetuned --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/syn --spec_lib_dir $syn_spec_lib_dir
+# python $PhosSight_DIA_dir/Script/run_diann_A549.py --step finetuned --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/A549 --spec_lib_dir $A549_spec_lib_dir
 
 # Analyze DIA-NN results to evaluate the effectiveness of PhosDetect
+
+pip install -e $analysis_dir
+
+
 
 conda deactivate

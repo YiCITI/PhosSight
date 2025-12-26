@@ -9,3 +9,4 @@ PhosSight-DDA/Script/PhosphoRS/phosphoRS-cli/
 PhosSight-DDA/Script/SpectralEntropy/
 PhosSight-DDA/Script/temp/
 .pytest_cache/
+*.egg-info/
