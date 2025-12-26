@@ -1,4 +1,4 @@
-# Generate fasta databases for Zhu lab's human phosphopeptides
+# Generate fasta databases for A549 DIA phosphopeptides
 
 from process_fasta.generate_samples import generate_modified_pep_fasta_file
 from process_fasta.txt2fasta import txt_to_fasta
