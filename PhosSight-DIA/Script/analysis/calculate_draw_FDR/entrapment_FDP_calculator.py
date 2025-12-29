@@ -1,4 +1,4 @@
-# Entrapment FDR calculator for batch processing of search results
+# Entrapment FDP calculator for batch processing of search results
 
 import os
 import argparse
@@ -14,8 +14,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 
-class EntrapmentFDRCalculator:
-    """Calculator class for calculating entrapment FDR of search results"""
+class EntrapmentFDPCalculator:
+    """Calculator class for calculating entrapment FDP of search results"""
 
     def __init__(self, 
                  species_fasta_dict: Dict[str, str], 
@@ -79,8 +79,8 @@ class EntrapmentFDRCalculator:
         return ratio
 
 
-    def _calculate_entrapment_FDR(self, result_df: pd.DataFrame, target_entrapment_ratio: float) -> Tuple[float, float, Dict[str, int]]:
-        """Calculate entrapment FDR of search results
+    def _calculate_entrapment_FDP(self, result_df: pd.DataFrame, target_entrapment_ratio: float) -> Tuple[float, float, Dict[str, int]]:
+        """Calculate entrapment FDP of search results
         
         Parameters
         ----------
@@ -92,8 +92,8 @@ class EntrapmentFDRCalculator:
         Returns
         -------
         Tuple[float, float, Dict[str, int]]
-            entrapment_FDR : float
-                Entrapment FDR calculated
+            entrapment_FDP : float
+                Entrapment FDP calculated
             dict_nums : Dict[str, int]
                 Dictionary containing identification counts for each category, keys include:
                 - 'num_yeast': Number of identified yeast
@@ -115,11 +115,11 @@ class EntrapmentFDRCalculator:
         #                                   /
         # (Number of identified target and entrapment peptides)
         if (ident_yeast_num + ident_synthetic_num + ident_entrapment_num) == 0:
-            raise ValueError("Sum of identified yeast, synthetic peptides, and entrapment peptides is 0, cannot calculate entrapment FDR")
+            raise ValueError("Sum of identified yeast, synthetic peptides, and entrapment peptides is 0, cannot calculate entrapment FDP")
         else:
-            entrapment_FDR = (ident_entrapment_num + target_entrapment_ratio * ident_entrapment_num) / (ident_target_num + ident_entrapment_num)
+            entrapment_FDP = (ident_entrapment_num + target_entrapment_ratio * ident_entrapment_num) / (ident_target_num + ident_entrapment_num)
 
-        return entrapment_FDR, {
+        return entrapment_FDP, {
             "num_yeast": ident_yeast_num,
             "num_synthetic": ident_synthetic_num,
             "num_target": ident_target_num,
@@ -129,7 +129,7 @@ class EntrapmentFDRCalculator:
 
 
     def calculate_for_single_result(self, result_file: str, spectral_library_file: str) -> Tuple[float, float, Dict[str, int]]:
-        """Calculate entrapment FDR for a single result file"""
+        """Calculate entrapment FDP for a single result file"""
         logger.info(f"Start processing result file: {result_file}")
         
         # Calculate ratio of target and entrapment peptides
@@ -146,16 +146,16 @@ class EntrapmentFDRCalculator:
         df_result.to_csv(output_path, index=False, encoding='utf-8-sig')
         logger.info(f"Saved result with Species column to: {output_path}")
 
-        # Calculate entrapment FDR
-        entrapment_FDR, dict_nums = self._calculate_entrapment_FDR(df_result, target_entrapment_ratio)
+        # Calculate entrapment FDP
+        entrapment_FDP, dict_nums = self._calculate_entrapment_FDP(df_result, target_entrapment_ratio)
         
-        logger.info(f"Entrapment FDR: {entrapment_FDR:.6f}")
+        logger.info(f"Entrapment FDP: {entrapment_FDP:.6f}")
         
-        return entrapment_FDR, dict_nums
+        return entrapment_FDP, dict_nums
     
 
-class BatchEntrapmentFDRProcessor:
-    """Processor class for batch processing entrapment FDR calculation"""
+class BatchEntrapmentFDPProcessor:
+    """Processor class for batch processing entrapment FDP calculation"""
     
     def __init__(self, base_dir: str, 
                  species_fasta_dict: Dict[str, str]):
@@ -176,7 +176,7 @@ class BatchEntrapmentFDRProcessor:
             }
         """
         self.base_dir = Path(base_dir)
-        self.calculator = EntrapmentFDRCalculator(
+        self.calculator = EntrapmentFDPCalculator(
             species_fasta_dict=species_fasta_dict
         )
 
@@ -203,14 +203,14 @@ class BatchEntrapmentFDRProcessor:
 
         for result_file, spectral_library_file in res_spec_lib_path_dict.items():
             try:
-                entrapment_FDR, dict_nums = self.calculator.calculate_for_single_result(
+                entrapment_FDP, dict_nums = self.calculator.calculate_for_single_result(
                     str(result_file), 
                     str(spectral_library_file)
                 )
 
                 results.append({
                     'used_spectral_library': Path(spectral_library_file).stem,
-                    'entrapment_FDR': entrapment_FDR,
+                    'entrapment_FDP': entrapment_FDP,
                     **dict_nums
                 })
                 
@@ -218,7 +218,7 @@ class BatchEntrapmentFDRProcessor:
                 logger.error(f"Error processing file {result_file}: {e}")
                 results.append({
                     'used_spectral_library': Path(spectral_library_file).stem,
-                    'entrapment_FDR': None,
+                    'entrapment_FDP': None,
                     'error': str(e)
                 })
         
@@ -230,7 +230,7 @@ class BatchEntrapmentFDRProcessor:
     def save_results_to_csv(self, results_df: pd.DataFrame, output_file: str = None):
         """Save results to CSV file"""
         if output_file is None:
-            output_file = self.base_dir / "entrapment_FDR_results.csv"
+            output_file = self.base_dir / "entrapment_FDP_results.csv"
         
         results_df.to_csv(output_file, index=False, encoding='utf-8-sig')
         logger.info(f"Results saved to: {output_file}")
@@ -246,7 +246,7 @@ def main(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Configure file logging
-    log_file = output_dir / "entrapment_FDR_calculation.log"
+    log_file = output_dir / "entrapment_FDP_calculation.log"
     file_handler = logging.FileHandler(log_file)
     file_handler.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
@@ -267,7 +267,7 @@ def main(
         "castor": str(fasta_file_castor)
     }
     
-    processor = BatchEntrapmentFDRProcessor(
+    processor = BatchEntrapmentFDPProcessor(
         base_dir=str(output_dir),
         species_fasta_dict=species_fasta_dict
     )
@@ -298,23 +298,23 @@ def main(
     results_df = processor.process_all_results_spec_libs(res_spec_lib_path_dict)
 
     # Display results
-    print("\n=== Entrapment FDR Calculation Results ===")
+    print("\n=== Entrapment FDP Calculation Results ===")
     print(results_df.to_string(index=False))
     
     # Save results to CSV
     processor.save_results_to_csv(results_df)
     
     # Display statistics
-    if 'entrapment_FDR' in results_df.columns:
-        successful_results = results_df.dropna(subset=['entrapment_FDR'])
+    if 'entrapment_FDP' in results_df.columns:
+        successful_results = results_df.dropna(subset=['entrapment_FDP'])
         if not successful_results.empty:
             print(f"\n=== Statistics ===")
             print(f"Number of successfully processed folders: {len(successful_results)}")
-            print(f"FDR range: {successful_results['entrapment_FDR'].min():.6f} - {successful_results['entrapment_FDR'].max():.6f}")
+            print(f"FDP range: {successful_results['entrapment_FDP'].min():.6f} - {successful_results['entrapment_FDP'].max():.6f}")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Calculate Entrapment FDR")
+    parser = argparse.ArgumentParser(description="Calculate Entrapment FDP")
     parser.add_argument("--fasta_dir", type=Path, required=True, help="Path to FASTA directory")
     parser.add_argument("--DIA_NN_result_dir", type=Path, required=True, help="Path to DIA-NN result directory")
     parser.add_argument("--spec_lib_dir", type=Path, required=True, help="Path to spectral library directory")

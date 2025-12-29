@@ -27,9 +27,9 @@ analysis_dir=~/github_repo/PhosSight/PhosSight-DIA/Script/analysis/
 
 # Create environment and install dependencies
 source $anacondaPath/etc/profile.d/conda.sh
-conda create -n PhosSight_DIA python=3.13.2 -y
+# conda create -n PhosSight_DIA python=3.13.2 -y
 conda activate PhosSight_DIA
-pip install -r $PhosSight_DIA_dir/Install/requirements.txt
+# pip install -r $PhosSight_DIA_dir/Install/requirements.txt
 
 # ============================================================================================
 # Predict theoretical spectra using DIA-NN's built-in theoretical spectrum prediction function
@@ -93,10 +93,13 @@ pip install -r $PhosSight_DIA_dir/Install/requirements.txt
 # python $PhosSight_DIA_dir/Script/run_diann_syn.py --step finetuned --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/syn --spec_lib_dir $syn_spec_lib_dir
 # python $PhosSight_DIA_dir/Script/run_diann_A549.py --step finetuned --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/A549 --spec_lib_dir $A549_spec_lib_dir
 
-# Analyze DIA-NN results to evaluate the effectiveness of PhosDetect
+# # =============================================================================================
+# # Analyze DIA-NN results to evaluate the effectiveness of PhosDetect
+# # =============================================================================================
 
-pip install -e $analysis_dir
+# pip install -e $analysis_dir
+# pip install matplotlib==3.10.6
 
-python $analysis_dir/calculate_draw_FDR/entrapment_fdr_calculator.py --fasta_dir $syn_fasta_dir --DIA_NN_result_dir $syn_result_dir --spec_lib_dir $syn_spec_lib_dir --output_dir $analysis_dir/output/
-
+# python $analysis_dir/calculate_draw_FDR/entrapment_fdr_calculator.py --fasta_dir $syn_fasta_dir --DIA_NN_result_dir $syn_result_dir --spec_lib_dir $syn_spec_lib_dir --output_dir $analysis_dir/output/
+python $analysis_dir/calculate_draw_FDR/draw.py --FDP_res_path $analysis_dir/output/entrapment_FDP_results.csv --output_dir $analysis_dir/output/
 conda deactivate
