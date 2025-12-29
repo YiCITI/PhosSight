@@ -97,6 +97,6 @@ pip install -r $PhosSight_DIA_dir/Install/requirements.txt
 
 pip install -e $analysis_dir
 
-
+python $analysis_dir/calculate_draw_FDR/entrapment_fdr_calculator.py --fasta_dir $syn_fasta_dir --DIA_NN_result_dir $syn_result_dir --spec_lib_dir $syn_spec_lib_dir --output_dir $analysis_dir/output/
 
 conda deactivate
