@@ -125,4 +125,7 @@ conda activate PhosSight_DIA
 # # Draw run time comparison for A549 dataset
 # python $analysis_dir/draw_run_time/draw.py --DIA_NN_result_dir $A549_result_dir --output_path $analysis_dir/output/A549_run_time_comparison.svg
 
+# Draw lines for modified synthetic peptide identifications
+python $analysis_dir/draw_site_ident_line/draw_count_modpep_ident.py --res_dir $syn_result_dir --output_dir $analysis_dir/output/
+
 conda deactivate
