@@ -16,9 +16,11 @@ fi
 anacondaPath=~/miniconda3
 diann_singularity_img_path=~/diann-2.2.0/diann-2.2.0.img
 diann_executable_path=~/diann-2.2.0/diann-linux
+syn_raw_dir=~/PhosSight_analysis/temp/dataset/syn
 syn_spec_lib_dir=~/PhosSight_analysis/temp/spec_lib/syn
 syn_fasta_dir=~/PhosSight_analysis/temp/database/syn
 syn_result_dir=~/PhosSight_analysis/temp/result/syn
+A549_raw_dir=~/PhosSight_analysis/temp/dataset/A549
 A549_spec_lib_dir=~/PhosSight_analysis/temp/spec_lib/A549
 A549_fasta_dir=~/PhosSight_analysis/temp/database/A549
 A549_result_dir=~/PhosSight_analysis/temp/result/A549
@@ -57,14 +59,14 @@ conda activate PhosSight_DIA
 # # ============================================================================================
 # # Run DIA-NN spectral library search using original spectral libraries to generate baseline results
 # # ============================================================================================
-# python $PhosSight_DIA_dir/Script/run_diann_syn.py --step original --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/syn --spec_lib_dir $syn_spec_lib_dir
-# python $PhosSight_DIA_dir/Script/run_diann_A549.py --step original --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/A549 --spec_lib_dir $A549_spec_lib_dir
+# python $PhosSight_DIA_dir/Script/run_diann_syn.py --step original --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir $syn_raw_dir --spec_lib_dir $syn_spec_lib_dir
+# python $PhosSight_DIA_dir/Script/run_diann_A549.py --step original --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir $A549_raw_dir --spec_lib_dir $A549_spec_lib_dir
 
 # # ==============================================================================================
 # # Run small-scale library search experiments to generate training data for fine-tuning
 # # ==============================================================================================
-# python $PhosSight_DIA_dir/Script/run_diann_syn.py --step three_rep --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/syn --spec_lib_dir $syn_spec_lib_dir
-# python $PhosSight_DIA_dir/Script/run_diann_A549.py --step two_rep --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/A549 --spec_lib_dir $A549_spec_lib_dir
+# python $PhosSight_DIA_dir/Script/run_diann_syn.py --step three_rep --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir $syn_raw_dir --spec_lib_dir $syn_spec_lib_dir
+# python $PhosSight_DIA_dir/Script/run_diann_A549.py --step two_rep --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir $A549_raw_dir --spec_lib_dir $A549_spec_lib_dir
 
 # # =============================================================================================
 # # Score detectability of theoretical spectra using PhosDetect
@@ -88,10 +90,10 @@ conda activate PhosSight_DIA
 # # =============================================================================================
 # # Run DIA-NN spectral library search (spectral libraries filtered by pretrained model and fine-tuned model)
 # # =============================================================================================
-# python $PhosSight_DIA_dir/Script/run_diann_syn.py --step pretrained --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/syn --spec_lib_dir $syn_spec_lib_dir
-# python $PhosSight_DIA_dir/Script/run_diann_A549.py --step pretrained --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/A549 --spec_lib_dir $A549_spec_lib_dir
-# python $PhosSight_DIA_dir/Script/run_diann_syn.py --step finetuned --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/syn --spec_lib_dir $syn_spec_lib_dir
-# python $PhosSight_DIA_dir/Script/run_diann_A549.py --step finetuned --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir ~/PhosSight_analysis/temp/dataset/A549 --spec_lib_dir $A549_spec_lib_dir
+# python $PhosSight_DIA_dir/Script/run_diann_syn.py --step pretrained --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir $syn_raw_dir --spec_lib_dir $syn_spec_lib_dir
+# python $PhosSight_DIA_dir/Script/run_diann_A549.py --step pretrained --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir $A549_raw_dir --spec_lib_dir $A549_spec_lib_dir
+# python $PhosSight_DIA_dir/Script/run_diann_syn.py --step finetuned --diann-cmd-prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $syn_result_dir --raw_dir $syn_raw_dir --spec_lib_dir $syn_spec_lib_dir
+# python $PhosSight_DIA_dir/Script/run_diann_A549.py --step finetuned --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir $A549_raw_dir --spec_lib_dir $A549_spec_lib_dir
 
 # # =============================================================================================
 # # Analyze DIA-NN results to evaluate the effectiveness of PhosDetect
