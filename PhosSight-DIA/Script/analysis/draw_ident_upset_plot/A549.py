@@ -12,7 +12,6 @@ figure_size = (40, 30)  # inches
 
 class PSMUpSetPlotAnalyzer_without_filter:
     def __init__(self):
-        # self.all_PSMs = {}
         self.phos_PSMs = {}
         self.phos_peptides = {}
 

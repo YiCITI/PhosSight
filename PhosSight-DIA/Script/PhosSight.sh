@@ -99,6 +99,9 @@ conda activate PhosSight_DIA
 
 # pip install -e $analysis_dir
 # pip install matplotlib==3.10.6
+# pip install scipy==1.16.2
+# pip install matplotlib-venn==1.1.2
+# pip install seaborn==0.13.2
 
 # # Entrapment FDR calculation and plotting for syn dataset
 # python $analysis_dir/calculate_draw_FDR/entrapment_fdr_calculator.py --fasta_dir $syn_fasta_dir --DIA_NN_result_dir $syn_result_dir --spec_lib_dir $syn_spec_lib_dir --output_dir $analysis_dir/output/
@@ -112,6 +115,7 @@ conda activate PhosSight_DIA
 # python $analysis_dir/draw_ident_upset_plot/A549.py --res_dir $A549_result_dir --output_dir $analysis_dir/output/
 # # TODO: Add R script from scy to generate upset plot
 
-
+# Venn diagram and violin plot for identification overlap and delta RT in A549 dataset
+python $analysis_dir/draw_ident_venn_violin/A549.py --res_dir $A549_result_dir --detect_path $A549_fasta_dir/peptide_scores_finetuned.txt --output_dir $analysis_dir/output/
 
 conda deactivate
