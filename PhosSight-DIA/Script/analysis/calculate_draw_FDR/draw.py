@@ -7,6 +7,7 @@ from PhosSight_paper_style import color_style
 
 # Standard style
 plt.rcParams.update({
+    'svg.fonttype': 'none',
     'font.family': 'sans-serif',
     'font.sans-serif': ['Arial', 'DejaVu Sans', 'Liberation Sans'],
     'font.size': 7,

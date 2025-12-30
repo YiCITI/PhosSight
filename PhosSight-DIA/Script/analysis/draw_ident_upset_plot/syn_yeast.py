@@ -7,9 +7,7 @@ import argparse
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-# Standard style
-font_size = 7
-figure_size = (40, 30)  # inches
+# Do not draw in this script anymore, just prepare the data for R script from scy
 
 class PSMUpSetPlotAnalyzer_with_SpeciesFilter:
     def __init__(self, species_fasta_dict, target_species=None):

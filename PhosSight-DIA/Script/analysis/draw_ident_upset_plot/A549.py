@@ -1,14 +1,10 @@
 import pandas as pd
 import argparse
-# import matplotlib.pyplot as plt
-# from upsetplot import UpSet, from_contents
 from pathlib import Path
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-# Standard style
-font_size = 7
-figure_size = (40, 30)  # inches
+# Do not draw in this script anymore, just prepare the data for R script from scy
 
 class PSMUpSetPlotAnalyzer_without_filter:
     def __init__(self):
