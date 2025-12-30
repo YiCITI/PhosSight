@@ -116,6 +116,11 @@ conda activate PhosSight_DIA
 # # TODO: Add R script from scy to generate upset plot
 
 # Venn diagram and violin plot for identification overlap and delta RT in A549 dataset
-python $analysis_dir/draw_ident_venn_violin/A549.py --res_dir $A549_result_dir --detect_path $A549_fasta_dir/peptide_scores_finetuned.txt --output_dir $analysis_dir/output/
+# python $analysis_dir/draw_ident_venn_violin/A549.py --res_dir $A549_result_dir --detect_path $A549_fasta_dir/peptide_scores_finetuned.txt --output_dir $analysis_dir/output/
+
+# Draw run time comparison for syn dataset
+# python $analysis_dir/draw_run_time/draw.py --DIA_NN_result_dir $syn_result_dir --output_path $analysis_dir/output/syn_run_time_comparison.svg
+# # Draw run time comparison for A549 dataset
+# python $analysis_dir/draw_run_time/draw.py --DIA_NN_result_dir $A549_result_dir --output_path $analysis_dir/output/A549_run_time_comparison.svg
 
 conda deactivate
