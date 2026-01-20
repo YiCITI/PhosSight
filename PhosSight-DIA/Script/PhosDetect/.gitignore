@@ -1,0 +1,7 @@
+data/*
+!data/all_negative.txt
+code/logs/
+code/log/
+code/output/
+code/weights/
+code/*.ipynb
