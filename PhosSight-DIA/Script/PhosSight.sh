@@ -69,10 +69,10 @@ python $PhosSight_DIA_dir/Script/run_diann_syn.py --step three_rep --diann-cmd-p
 python $PhosSight_DIA_dir/Script/run_diann_A549.py --step two_rep --diann_cmd_prefix "singularity exec $diann_singularity_img_path $diann_executable_path" --output_dir $A549_result_dir --raw_dir $A549_raw_dir --spec_lib_dir $A549_spec_lib_dir
 
 # =============================================================================================
-# Score detectability of theoretical spectra using PhosDetect
+# Score detectability of all candidate peptides using PhosDetect
 # =============================================================================================
 
-# TODO: Finetune PhosDetect model using the result in $syn_result_dir and $A549_result_dir (directory for_fintuning_res), and get the fine-tuned PhosDetect prediction of detectability scores, generate the detectability score files in $syn_fasta_dir/peptide_scores_finetuned.txt and $A549_fasta_dir/peptide_scores_finetuned.txt
+# TODO: Finetune PhosDetect model using the result in $syn_result_dir and $A549_result_dir (directory for_fintuning_res), and get the fine-tuned PhosDetect, generate the detectability score for $syn_fasta_dir/combined_syn_yeast_ecoli_castor_original.fasta and $A549_fasta_dir/human_all_peptides_2_7_46.fasta and output in $syn_fasta_dir/peptide_scores_finetuned.txt and $A549_fasta_dir/peptide_scores_finetuned.txt
 
 # =============================================================================================
 # Filter the spectral library to generate spectral library for DIA analysis
