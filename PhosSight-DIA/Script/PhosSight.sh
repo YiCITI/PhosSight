@@ -13,7 +13,7 @@ if ! command -v singularity &> /dev/null; then
 fi
 
 # Set pathes
-anacondaPath=~/miniconda3
+anaconda_path=~/miniconda3
 diann_singularity_img_path=~/diann-2.2.0/diann-2.2.0.img
 diann_executable_path=~/diann-2.2.0/diann-linux
 syn_raw_dir=~/PhosSight_analysis/temp/dataset/syn
@@ -28,7 +28,7 @@ PhosSight_DIA_dir=~/github_repo/PhosSight/PhosSight-DIA/
 analysis_dir=~/github_repo/PhosSight/PhosSight-DIA/Script/analysis/
 
 # Create environment and install dependencies
-source $anacondaPath/etc/profile.d/conda.sh
+source $anaconda_path/etc/profile.d/conda.sh
 # conda create -n PhosSight_DIA python=3.13.2 -y
 conda activate PhosSight_DIA
 # pip install -r $PhosSight_DIA_dir/Install/requirements.txt
@@ -109,23 +109,23 @@ conda activate PhosSight_DIA
 # python $analysis_dir/calculate_draw_FDR/entrapment_fdr_calculator.py --fasta_dir $syn_fasta_dir --DIA_NN_result_dir $syn_result_dir --spec_lib_dir $syn_spec_lib_dir --output_dir $analysis_dir/output/
 # python $analysis_dir/calculate_draw_FDR/draw.py --FDP_res_path $analysis_dir/output/entrapment_FDP_results.csv --output_dir $analysis_dir/output/
 
-# Upset plot for identification overlap in syn dataset
+# # Upset plot for identification overlap in syn dataset
 # python $analysis_dir/draw_ident_upset_plot/syn_yeast.py --res_dir $syn_result_dir --fasta_dir $syn_fasta_dir --output_dir $analysis_dir/output/
 # # TODO: Add R script from scy to generate upset plot
 
-# Upset plot for identification overlap in A549 dataset
+# # Upset plot for identification overlap in A549 dataset
 # python $analysis_dir/draw_ident_upset_plot/A549.py --res_dir $A549_result_dir --output_dir $analysis_dir/output/
 # # TODO: Add R script from scy to generate upset plot
 
-# Venn diagram and violin plot for identification overlap and delta RT in A549 dataset
+# # Venn diagram and violin plot for identification overlap and delta RT in A549 dataset
 # python $analysis_dir/draw_ident_venn_violin/A549.py --res_dir $A549_result_dir --detect_path $A549_fasta_dir/peptide_scores_finetuned.txt --output_dir $analysis_dir/output/
 
-# Draw run time comparison for syn dataset
-# python $analysis_dir/draw_run_time/draw.py --DIA_NN_result_dir $syn_result_dir --output_path $analysis_dir/output/syn_run_time_comparison.svg
+# # Draw run time comparison for syn dataset
+# python $analysis_dir/draw_run_time/draw.py --DIA_NN_result_dir $syn_result_dir --output_path $analysis_dir/output/run_time_comparison_syn.svg
 # # Draw run time comparison for A549 dataset
-# python $analysis_dir/draw_run_time/draw.py --DIA_NN_result_dir $A549_result_dir --output_path $analysis_dir/output/A549_run_time_comparison.svg
+# python $analysis_dir/draw_run_time/draw.py --DIA_NN_result_dir $A549_result_dir --output_path $analysis_dir/output/run_time_comparison_A549.svg
 
-# Draw lines for modified synthetic peptide identifications
-python $analysis_dir/draw_site_ident_line/draw_count_modpep_ident.py --res_dir $syn_result_dir --output_dir $analysis_dir/output/
+# # Draw lines for modified synthetic peptide identifications
+# python $analysis_dir/draw_synmod_ident_line/draw.py --res_dir $syn_result_dir --output_dir $analysis_dir/output/
 
 conda deactivate
