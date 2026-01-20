@@ -8,5 +8,10 @@ PhosSight-DDA/Script/pDeep3/SpectralEntropy/
 PhosSight-DDA/Script/PhosphoRS/phosphoRS-cli/
 PhosSight-DDA/Script/SpectralEntropy/
 PhosSight-DDA/Script/temp/
+PhosSight-DDA/Script/PhosSight_*.sh
+PhosSight-DDA/Script/scripts.sh
+PhosSight-DDA/Script/DeepRelocalization/calculate_localization_probability_entropy_without_phosdetect.R
+PhosSight-DDA/Script/Percolator/GetPhosSightResults_without_phosdetect.R
+PhosSight-DDA/Script/Percolator/format_percolator_input_PhosSight_without_phosdetect.R
+PhosSight-DDA/Parameters/UCEC_TMT*_maxquant.param
 .pytest_cache/
-*.egg-info/

@@ -44,11 +44,10 @@ for (i in 1:nrow(data_PhosphoRS)){
 }
 data_PhosphoRS = data_PhosphoRS[tmp,]
 
-cat("PhosphoRS results rows:", nrow(data_PhosphoRS), "\n")
-cat("=== DEBUG: data_PhosphoRS columns ===\n")
-cat("data_PhosphoRS columns:", paste(colnames(data_PhosphoRS), collapse=", "), "\n")
-cat("data_PhosphoRS dimensions:", dim(data_PhosphoRS), "\n")
-
+# cat("PhosphoRS results rows:", nrow(data_PhosphoRS), "\n")
+# cat("=== DEBUG: data_PhosphoRS columns ===\n")
+# cat("data_PhosphoRS columns:", paste(colnames(data_PhosphoRS), collapse=", "), "\n")
+# cat("data_PhosphoRS dimensions:", dim(data_PhosphoRS), "\n")
 
 data_AutoRT <- data[data$AutoRTProb>=0.75,]
 data_pDeep <- data[data$pDeepProb>=0.75,]
