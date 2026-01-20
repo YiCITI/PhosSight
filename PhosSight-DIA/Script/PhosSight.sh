@@ -108,11 +108,11 @@ python $analysis_dir/calculate_draw_FDR/draw.py --FDP_res_path $analysis_dir/out
 
 # Upset plot for identification overlap in syn dataset
 python $analysis_dir/draw_ident_upset_plot/syn_yeast.py --res_dir $syn_result_dir --fasta_dir $syn_fasta_dir --output_dir $analysis_dir/output/
-# TODO: Add R script from scy to generate upset plot
+# TODO: Add R script from scy to generate upset plot, using $syn_fasta_dir/upset_plot_JPST000859_finetuned_peptides.csv and $syn_fasta_dir/upset_plot_JPST000859_finetuned_phos_PSMs.csv
 
 # Upset plot for identification overlap in A549 dataset
 python $analysis_dir/draw_ident_upset_plot/A549.py --res_dir $A549_result_dir --output_dir $analysis_dir/output/
-# TODO: Add R script from scy to generate upset plot
+# TODO: Add R script from scy to generate upset plot, using $A549_fasta_dir/upset_plot_202503_A549_finetuned_phos_peptides.csv and $A549_fasta_dir/upset_plot_202503_A549_finetuned_phos_PSMs.csv
 
 # Venn diagram and violin plot for identification overlap and delta RT in A549 dataset
 python $analysis_dir/draw_ident_venn_violin/A549.py --res_dir $A549_result_dir --detect_path $A549_fasta_dir/peptide_scores_finetuned.txt --output_dir $analysis_dir/output/
