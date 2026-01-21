@@ -15,3 +15,9 @@ PhosSight-DDA/Script/Percolator/GetPhosSightResults_without_phosdetect.R
 PhosSight-DDA/Script/Percolator/format_percolator_input_PhosSight_without_phosdetect.R
 PhosSight-DDA/Parameters/UCEC_TMT*_maxquant.param
 .pytest_cache/
+
+# Large data files (>100MB) that cannot be uploaded to GitHub
+# Analysis data files
+Phosdetect/analysis/drawfig7/*.tsv
+Phosdetect/analysis/drawsuppfigs8/*.tsv
+Phosdetect/analysis/drawsuppfigs8/*.xlsx

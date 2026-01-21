@@ -504,8 +504,8 @@ def main():
     # 计算p值
     p_value, test_name = calculate_p_value(positive_scores, negative_scores)
     
-    # 创建增强差异表现的箱线图（导出 PNG 和 SVG 到指定目录）
-    output_dir = "/data0/wangb/cd/plottu"
+    # 创建增强差异表现的箱线图（导出 PNG 和 SVG 到脚本所在目录）
+    output_dir = script_dir
     create_enhanced_boxplot(positive_scores, negative_scores, p_value, output_dir=output_dir, output_basename="enhanced_boxplot_10000")
 
     print(f"\n🎉 完成!")

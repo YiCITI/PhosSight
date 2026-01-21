@@ -33,7 +33,10 @@ plt.rcParams.update({
 
 def load_data():
     """加载数据"""
-    df = pd.read_csv('/data0/wangb/cd/duibi0826/0826comparison/model_performance_comparison.csv')
+    # 使用脚本所在目录作为基准路径
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_file = os.path.join(script_dir, 'model_performance_comparison.csv')
+    df = pd.read_csv(data_file)
     
     # 处理数据集名称
     df['Dataset'] = df['Dataset'].str.replace('.csv', '')
@@ -135,7 +138,9 @@ def create_non_phosphorylation_plots():
     # Finetuned版本颜色稍深但仍保持淡色调，PhosDetect使用稍深的低饱和度红色
     finetuned_colors = ['#9CC5D8', '#98C5C5', '#90C5B0', '#C59595']
 
-    outdir = '/data0/wangb/cd/plottu'
+    # 使用脚本所在目录作为输出目录
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    outdir = script_dir
     plot_nonphos_group(
         df, datasets,
         original_models, original_labels, original_colors,

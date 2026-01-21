@@ -28,9 +28,11 @@ plt.rcParams.update({
     'axes.unicode_minus': False
 })
 
-ORIGINAL_CSV = '/data0/wangb/cd/duibi0826/0826comparison/evaluation_results/phosight_v2_summary_results.csv'
-FINETUNED_CSV = '/data0/wangb/cd/duibi0826/0826comparison/evaluation_results/phosight_finetuned_summary_results.csv'
-OUTDIR = '/data0/wangb/cd/plottu'
+# 使用脚本所在目录作为基准路径
+script_dir = os.path.dirname(os.path.abspath(__file__))
+ORIGINAL_CSV = os.path.join(script_dir, 'phosight_v2_summary_results.csv')
+FINETUNED_CSV = os.path.join(script_dir, 'phosight_finetuned_summary_results.csv')
+OUTDIR = script_dir
 
 
 def load_merged():

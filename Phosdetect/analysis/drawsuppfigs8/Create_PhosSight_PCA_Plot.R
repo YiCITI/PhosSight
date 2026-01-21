@@ -11,9 +11,47 @@ cat("Creating PhosSight PCA Plot\n")
 cat(paste(rep("=", 80), collapse = ""), "\n\n")
 
 # ===== 配置路径 =====
-phosSight_file_norm <- "../PhosSight_Merged_full_Normalized.tsv"
-sample_info_file <- "../../mmc1.xlsx"
-output_dir <- "../qcfenxi/figures"
+# 获取脚本所在目录
+# 方法1: 尝试从RStudio获取
+script_dir <- tryCatch({
+  if (requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::isAvailable()) {
+    dirname(rstudioapi::getSourceEditorContext()$path)
+  } else {
+    NULL
+  }
+}, error = function(e) NULL)
+
+# 方法2: 如果方法1失败，尝试从调用栈获取
+if (is.null(script_dir) || script_dir == "" || !dir.exists(script_dir)) {
+  script_dir <- tryCatch({
+    frame_files <- sapply(sys.frames(), function(x) x$ofile)
+    frame_files <- frame_files[!sapply(frame_files, is.null)]
+    if (length(frame_files) > 0) {
+      dirname(frame_files[[length(frame_files)]])
+    } else {
+      NULL
+    }
+  }, error = function(e) NULL)
+}
+
+# 方法3: 如果都失败，使用当前工作目录
+if (is.null(script_dir) || script_dir == "" || !dir.exists(script_dir)) {
+  script_dir <- getwd()
+}
+
+# 构建文件路径
+phosSight_file_norm <- file.path(script_dir, "PhosSight_Merged_full_Normalized.tsv")
+sample_info_file <- file.path(script_dir, "mmc1.xlsx")
+
+# 检查文件是否存在，如果不在脚本目录，尝试当前目录
+if (!file.exists(phosSight_file_norm)) {
+  phosSight_file_norm <- "PhosSight_Merged_full_Normalized.tsv"
+}
+if (!file.exists(sample_info_file)) {
+  sample_info_file <- "mmc1.xlsx"
+}
+
+output_dir <- script_dir
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
 # ===== 1. 读取归一化数据 =====
