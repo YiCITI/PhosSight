@@ -516,7 +516,7 @@ Coming soon...
 
 ## Contact
 
-Xinpei Yi - [@yixinpei](https://twitter.com/yixinpei) - yixinpei13@gmail.com
+Xinpei Yi - [@yixinpei]([https://twitter.com/yixinpei](https://scholar.google.com/citations?user=Z4lICl8AAAAJ&hl=en)) - yixinpei13@gmail.com
 
 
 ## Acknowledgements
@@ -528,6 +528,9 @@ Xinpei Yi - [@yixinpei](https://twitter.com/yixinpei) - yixinpei13@gmail.com
 - [SpectralEntropy](https://github.com/YuanyueLi/SpectralEntropy)
 
 ## References
+Ben Wang, Zhiyuan Cheng, Chengying She, Jiahui Zhang, Lin Lv, Hongwen Zhu, Lizhuang Liu, Yan Fu, Xinpei Yi, PhosSight: A Unified Deep Learning Framework Boosting and Accelerating Phosphoproteomic Identification to Enable Biological Discoveries. Under review (2026).
+
+
 
 ```
 
