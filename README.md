@@ -21,6 +21,9 @@
       - [Kinase activity score inference](#kinase-activity-score-inference)
   - [DIA](#dia)
     - [Files Structure](#files-structure-2)
+  - [TMT Quantification Analysis](#tmt-quantification-analysis)
+    - [Files Structure](#files-structure-3)
+    - [How to Use](#how-to-use-1)
   - [Contact](#contact)
   - [Acknowledgements](#acknowledgements)
   - [References](#references)
@@ -223,12 +226,10 @@ PhosSight-DDA
 |---|---Features
 |---|---generate_train_prediction
 |---|---GenerateFeatureMatrix
-|---|---KinaseActivityScoreInference
 |---|---pDeep3
 |---|---Percolator
 |---|---PGA
 |---|---PhosphoRS
-|---|---TMTQuantification
 |---|---PhosSight.sh
 |---Parameters
 |---|---PXD000138_maxquant.param
@@ -514,6 +515,135 @@ We recommend reviewing these links to ensure a correct installation.
 
 Coming soon...
 
+## TMT Quantification Analysis
+
+TMT Quantification Analysis provides a complete workflow for TMT-labeled phosphoproteomic data quantification and analysis, including MASCI-based ion intensity extraction, site-level quantification, and comparative analysis between PhosSight and PhosphoRS methods.
+
+### Files Structure
+
+```
+TMTquantificationanalysis
+|---code/                          # Main analysis scripts
+|---|---generate_MASCIParameters.py # Generate MASCI parameter files
+|---|---MASCI_param/               # MASCI parameter files
+|---|---|---TMT10_LTQ-FT_10ppm_ReporterTol0.003Da_2014-08-06.xml
+|---|---|---TMT11_LTQ-FT_10ppm_ReporterTol0.003Da_2017-03-17.xml
+|---|---run_MASCI_simple.bat        # Run MASCI quantification (Windows)
+|---|---run_MASCI_simple.sh          # Run MASCI quantification (Linux)
+|---|---run_complete_workflow_full.bat # Complete workflow automation
+|---|---step1_GetIonIntensity_PhosSight_17plex.R    # Extract ion intensities for PhosSight
+|---|---step1_GetIonIntensity_PhosphoRS_17plex.R     # Extract ion intensities for PhosphoRS
+|---|---step2_sitequant_full_17plex.py                # Site-level quantification
+|---|---step3_AdjustSiteTable_17plex.py               # Adjust site table
+|---|---step4_MergeSiteTables_17plex.py               # Merge site tables
+|---|---step5_GetUniprotIDGeneName_17plex.py           # Add Uniprot ID and gene names
+|---|---README.md                    # Detailed workflow documentation
+|---drawfig7/                       # Scripts for Figure 7 generation
+|---|---Create_QuantifiableSites_100Samples.R
+|---|---Create_PhosSight_vs_PhosphoRS_GainSharedLoss.R
+|---|---Create_MissingValue_SiteCount_Comparison.R
+|---|---README.md
+|---drawsuppfigs8/                  # Scripts for Supplementary Figure 8 generation
+|---|---Create_PhosSight_Boxplot_AllSamples.R
+|---|---Create_PhosSight_Density_Plot.R
+|---|---Create_PhosSight_PCA_Plot.R
+|---|---README.md
+```
+
+- **code/** contains the main analysis scripts for TMT quantification workflow:
+  - **generate_MASCIParameters.py** generates MASCI parameter files for batch processing
+  - **MASCI_param/** stores MASCI parameter files for TMT10 and TMT11 labeling
+  - **run_MASCI_simple.bat/sh** runs MASCI quantification on RAW files
+  - **step1_GetIonIntensity_*.R** extracts reporter ion intensities from MASCI results and matches with identification results
+  - **step2_sitequant_full_17plex.py** performs site-level quantification using full sitequant workflow
+  - **step3-5** scripts perform post-processing: table adjustment, merging, and annotation
+- **drawfig7/** contains R scripts for generating comparison figures between PhosSight and PhosphoRS methods
+- **drawsuppfigs8/** contains R scripts for generating quality control and analysis plots
+
+### How to Use
+
+#### Prerequisites
+
+1. Install [MASCI](https://github.com/PNNL-Comp-Mass-Spec/MASIC) for TMT reporter ion quantification
+2. Ensure R environment is set up with required packages (tidyverse, data.table, ggplot2)
+3. Ensure Python environment is set up with required packages (pandas, numpy)
+
+#### Step 1: MASCI Quantification
+
+Run MASCI to extract reporter ion intensities from RAW files:
+
+```bash
+cd TMTquantificationanalysis/code
+# Windows
+run_MASCI_simple.bat
+
+# Linux
+bash run_MASCI_simple.sh
+```
+
+Or use the parameter generator:
+
+```bash
+python generate_MASCIParameters.py <input_dir> <output_script> <output_dir> <TMTType>
+```
+
+#### Step 2: Extract Ion Intensities
+
+Match MASCI quantification results with identification results:
+
+```bash
+# For PhosSight results
+Rscript step1_GetIonIntensity_PhosSight_17plex.R
+
+# For PhosphoRS results
+Rscript step1_GetIonIntensity_PhosphoRS_17plex.R
+```
+
+#### Step 3: Site-Level Quantification
+
+Perform site-level quantification using the full sitequant workflow:
+
+```bash
+python step2_sitequant_full_17plex.py -i <intensity_file> -f <fasta_file> -o <output_file>
+```
+
+#### Step 4-5: Post-Processing
+
+Adjust, merge, and annotate site tables:
+
+```bash
+python step3_AdjustSiteTable_17plex.py -i <input> -o <output>
+python step4_MergeSiteTables_17plex.py -i <input> -o <output>
+python step5_GetUniprotIDGeneName_17plex.py -i <input> -o <output>
+```
+
+#### Complete Workflow
+
+Run the complete workflow automatically:
+
+```bash
+cd TMTquantificationanalysis/code
+run_complete_workflow_full.bat
+```
+
+#### Generate Figures
+
+Generate comparison and analysis figures:
+
+```bash
+cd TMTquantificationanalysis/drawfig7
+Rscript Create_QuantifiableSites_100Samples.R
+Rscript Create_PhosSight_vs_PhosphoRS_GainSharedLoss.R
+Rscript Create_MissingValue_SiteCount_Comparison.R
+
+cd ../drawsuppfigs8
+Rscript Create_PhosSight_Boxplot_AllSamples.R
+Rscript Create_PhosSight_Density_Plot.R
+Rscript Create_PhosSight_PCA_Plot.R
+```
+
+**Note**: Large data files (>100MB) required for these scripts are not included in the repository. Please refer to the README files in each folder for data file requirements.
+
 ## Contact
 
 Xinpei Yi - [@yixinpei]([https://twitter.com/yixinpei](https://scholar.google.com/citations?user=Z4lICl8AAAAJ&hl=en)) - yixinpei13@gmail.com
@@ -521,11 +651,30 @@ Xinpei Yi - [@yixinpei]([https://twitter.com/yixinpei](https://scholar.google.co
 
 ## Acknowledgements
 
-- [DeepRescore2](https://github.com/bzhanglab/DeepRescore2)
-- [AutoRT](https://github.com/bzhanglab/AutoRT)
-- [pDeep3](https://github.com/pFindStudio/pDeep3)
-- [PhosphoRS](https://github.com/lmsac/phosphoRS-cli)
-- [SpectralEntropy](https://github.com/YuanyueLi/SpectralEntropy)
+We acknowledge the following open-source software and tools used in this project:
+
+### Deep Learning and Rescoring
+- [DeepRescore2](https://github.com/bzhanglab/DeepRescore2) - Deep learning-based peptide rescoring
+- [AutoRT](https://github.com/bzhanglab/AutoRT) - Retention time prediction
+- [pDeep3](https://github.com/pFindStudio/pDeep3) - MS/MS spectrum prediction
+
+### Phosphosite Localization
+- [PhosphoRS](https://github.com/lmsac/phosphoRS-cli) - Phosphosite localization probability calculation
+
+### Spectral Analysis
+- [SpectralEntropy](https://github.com/YuanyueLi/SpectralEntropy) - Spectral similarity calculation using entropy distance
+
+### TMT Quantification
+- [MASCI](https://github.com/PNNL-Comp-Mass-Spec/MASIC) - Mass spectrometry analysis and quantification for TMT-labeled datasets
+
+### Search Engines
+- [MS-GF+](https://github.com/MSGFPlus/msgfplus) - Database search engine
+- [Comet](http://comet-ms.sourceforge.net/) - Database search engine
+- [X!Tandem](https://www.thegpm.org/TANDEM/) - Database search engine
+- [MaxQuant](https://maxquant.org/) - Database search and quantification platform
+
+### DIA Analysis
+- [DIA-NN](https://github.com/vdemichev/DiaNN) - Data-independent acquisition data analysis
 
 ## References
 Ben Wang, Zhiyuan Cheng, Chengying She, Jiahui Zhang, Lin Lv, Hongwen Zhu, Lizhuang Liu, Yan Fu, Xinpei Yi, **PhosSight: A Unified Deep Learning Framework Boosting and Accelerating Phosphoproteomic Identification to Enable Biological Discoveries**. *Under review* (2026).
