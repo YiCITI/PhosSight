@@ -530,8 +530,4 @@ Xinpei Yi - [@yixinpei]([https://twitter.com/yixinpei](https://scholar.google.co
 ## References
 Ben Wang, Zhiyuan Cheng, Chengying She, Jiahui Zhang, Lin Lv, Hongwen Zhu, Lizhuang Liu, Yan Fu, Xinpei Yi, PhosSight: A Unified Deep Learning Framework Boosting and Accelerating Phosphoproteomic Identification to Enable Biological Discoveries. Under review (2026).
 
-
-
-```
-
 ```
