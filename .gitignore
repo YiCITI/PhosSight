@@ -18,6 +18,6 @@ PhosSight-DDA/Parameters/UCEC_TMT*_maxquant.param
 
 # Large data files (>100MB) that cannot be uploaded to GitHub
 # Analysis data files
-Phosdetect/analysis/drawfig7/*.tsv
-Phosdetect/analysis/drawsuppfigs8/*.tsv
-Phosdetect/analysis/drawsuppfigs8/*.xlsx
+Phosdetect/TMTquantificationanalysis/drawfig7/*.tsv
+Phosdetect/TMTquantificationanalysis/drawsuppfigs8/*.tsv
+Phosdetect/TMTquantificationanalysis/drawsuppfigs8/*.xlsx
