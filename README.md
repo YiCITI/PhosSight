@@ -646,7 +646,8 @@ Rscript Create_PhosSight_PCA_Plot.R
 
 ## Contact
 
-Xinpei Yi - [@yixinpei]([https://twitter.com/yixinpei](https://scholar.google.com/citations?user=Z4lICl8AAAAJ&hl=en)) - yixinpei13@gmail.com
+Xinpei Yi - [@yixinpei](https://scholar.google.com/citations?user=Z4lICl8AAAAJ&hl=en) - yixinpei13@gmail.com
+<br/>Lab Website: [YiCITI](https://github.com/YiCITI/)
 
 
 ## Acknowledgements
