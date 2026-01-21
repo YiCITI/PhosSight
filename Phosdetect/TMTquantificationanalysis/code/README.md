@@ -85,7 +85,7 @@ cd C:\Users\wk\Desktop\TMTQuantification\full
    - Python 环境: `base`（包含 pandas, numpy）
 
 3. **运行时间**:
-   - 完整版 sitequant 比简化版慢很多（需要 FASTA 映射）
+   - 完整版 sitequant （需要 FASTA 映射）
    - 17 个批次预计需要数小时
 
 4. **如果某个批次失败**:
