@@ -554,6 +554,39 @@ TMTquantificationanalysis
 - **drawfig7/** contains R scripts for generating comparison figures between PhosSight and PhosphoRS methods
 - **drawsuppfigs8/** contains R scripts for generating quality control and analysis plots
 
+### Data Requirements
+
+The TMT Quantification Analysis workflow requires the following data files:
+
+#### TMT01-TMT17 Dataset
+
+- **TMT批次**: TMT01-TMT17 (17 batches total)
+- **TMT通道**: 170 channels (17 × 10 channels per batch)
+- **样本通道**: 153 channels (excluding 17 reference channels 126)
+
+#### Required Data Files
+
+1. **MASCI Quantification Results**
+   - Location: MASCI output directories for each TMT batch (e.g., `QuantificationResults01` to `QuantificationResults17`)
+   - Each folder should contain MASCI output files for the corresponding TMT batch
+   - Required files: ReporterIons and SICstats files
+   - **Note**: Update the path in the R scripts (`step1_GetIonIntensity_*.R`) to match your MASCI output directory
+
+2. **Identification Results**
+   - PhosSight identification results for each TMT batch (TMT01-TMT17)
+   - PhosphoRS identification results for each TMT batch (TMT01-TMT17)
+   - These will be merged into: `PhosSightResults_TMT01_17.txt` and `PhosphoRSResults_TMT01_17.txt`
+
+3. **FASTA File**
+   - Protein sequence database file (e.g., `swiss_prot_human_20190214_target_conts_96Libraries.fasta`)
+   - Required for site-level quantification and precise site localization
+
+4. **RAW Files** (for MASCI quantification)
+   - Original RAW mass spectrometry files for each TMT batch
+   - Used as input for MASCI to extract reporter ion intensities
+
+**Note**: The TMT01-TMT17 dataset used in our manuscript can be downloaded from [Zenodo](https://zenodo.org/records/10049730) (if available) or obtained from the corresponding authors. Please ensure all data files are properly organized before running the workflow.
+
 ### How to Use
 
 #### Prerequisites
@@ -561,6 +594,7 @@ TMTquantificationanalysis
 1. Install [MASCI](https://github.com/PNNL-Comp-Mass-Spec/MASIC) for TMT reporter ion quantification
 2. Ensure R environment is set up with required packages (tidyverse, data.table, ggplot2)
 3. Ensure Python environment is set up with required packages (pandas, numpy)
+4. Prepare the TMT01-TMT17 dataset and organize files according to the data requirements above
 
 #### Step 1: MASCI Quantification
 
