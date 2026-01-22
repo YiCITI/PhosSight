@@ -585,7 +585,7 @@ The TMT Quantification Analysis workflow requires the following data files:
    - Original RAW mass spectrometry files for each TMT batch
    - Used as input for MASCI to extract reporter ion intensities
 
-**Note**: The TMT01-TMT17 dataset used in our manuscript can be downloaded from [Zenodo](https://zenodo.org/records/10049730) (if available) or obtained from the corresponding authors. Please ensure all data files are properly organized before running the workflow.
+**Note**: The TMT01-TMT17 dataset used in our manuscript can be downloaded online or obtained from the corresponding authors. Please ensure all data files are properly organized before running the workflow.
 
 ### How to Use
 
