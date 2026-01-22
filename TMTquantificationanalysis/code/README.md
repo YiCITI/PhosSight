@@ -48,11 +48,7 @@ python step4_MergeSiteTables_17plex.py -i ... -o ...
 python step5_GetUniprotIDGeneName_17plex.py -i ... -o ...
 ```
 
-### Step 6: 缺失值分析
-```bash
-Rscript analysis/Compare_PhosSight_vs_PhosphoRS_MissingValue_17plex.R
-Rscript analysis/Plot_PhosSight_vs_PhosphoRS_17plex.R
-```
+
 
 ## 一键运行
 
@@ -71,7 +67,7 @@ cd C:\Users\wk\Desktop\TMTQuantification\full
 | Step 3 | `*_site_table_Adjust_17plex.tsv` | 调整后的位点表 |
 | Step 4 | `*_Merged_17plex.tsv` | 合并后的位点表 |
 | Step 5 | `*_UniprotID_GeneName_17plex.tsv` | 带基因名的位点表 |
-| Step 6 | `analysis/MissingValueCutoff/*.png` | 缺失值分析图 |
+
 
 ## 注意事项
 
