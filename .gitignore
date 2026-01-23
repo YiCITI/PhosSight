@@ -16,6 +16,8 @@ PhosSight-DDA/Script/Percolator/format_percolator_input_PhosSight_without_phosde
 PhosSight-DDA/Parameters/UCEC_TMT*_maxquant.param
 .pytest_cache/
 
+PhosSight-DIA/temp/
+
 # Large data files (>100MB) that cannot be uploaded to GitHub
 # Analysis data files
 TMTquantificationanalysis/drawfig7/*.tsv

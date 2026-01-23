@@ -185,22 +185,36 @@ python $analysis_dir/calculate_draw_FDR/draw.py --FDP_res_path $analysis_dir/out
 # Upset plot for identification overlap in syn dataset
 python $analysis_dir/draw_ident_upset_plot/syn_yeast.py --res_dir $syn_result_dir --fasta_dir $syn_fasta_dir --output_dir $analysis_dir/output/
 
+source $anaconda_path/etc/profile.d/conda.sh
+conda activate R_env
+
 # Generate upset plot using R script
-Rscript $analysis_dir/draw_ident_upset_plot/generate_upset_plot_syn.R \
-    --peptides_input $syn_fasta_dir/upset_plot_JPST000859_finetuned_peptides.csv \
-    --psms_input $syn_fasta_dir/upset_plot_JPST000859_finetuned_phos_PSMs.csv \
-    --output_dir $analysis_dir/output/ \
-    --dataset_name "syn"
+Rscript $analysis_dir/draw_ident_upset_plot/draw_upset_plot.R \
+    $syn_fasta_dir/upset_plot_JPST000859_finetuned_peptides.csv \
+    $syn_result_dir/upset_plot_JPST000859_finetuned_peptides.svg
+
+Rscript $analysis_dir/draw_ident_upset_plot/draw_upset_plot.R \
+    $syn_fasta_dir/upset_plot_JPST000859_finetuned_PSMs.csv \
+    $syn_result_dir/upset_plot_JPST000859_finetuned_PSMs.svg
+
+source $anaconda_path/etc/profile.d/conda.sh
+conda activate PhosSight_DIA
 
 # Upset plot for identification overlap in A549 dataset
 python $analysis_dir/draw_ident_upset_plot/A549.py --res_dir $A549_result_dir --output_dir $analysis_dir/output/
 
+source $anaconda_path/etc/profile.d/conda.sh
+conda activate R_env
+
 # Generate upset plot using R script
-Rscript $analysis_dir/draw_ident_upset_plot/generate_upset_plot_A549.R \
-    --peptides_input $A549_fasta_dir/upset_plot_202503_A549_finetuned_phos_peptides.csv \
-    --psms_input $A549_fasta_dir/upset_plot_202503_A549_finetuned_phos_PSMs.csv \
-    --output_dir $analysis_dir/output/ \
-    --dataset_name "A549"
+Rscript $analysis_dir/draw_ident_upset_plot/draw_upset_plot.R \
+    $A549_fasta_dir/upset_plot_202503_A549_finetuned_phos_PSMs.csv \
+    $A549_result_dir/upset_plot_202503_A549_finetuned_phos_PSMs.svg
+
+Rscript $analysis_dir/draw_ident_upset_plot/draw_upset_plot.R \
+    $A549_fasta_dir/upset_plot_202503_A549_finetuned_phos_PSMs.csv \
+    $A549_result_dir/upset_plot_202503_A549_finetuned_phos_PSMs.svg
+
 
 # Venn diagram and violin plot for identification overlap and delta RT in A549 dataset
 python $analysis_dir/draw_ident_venn_violin/A549.py --res_dir $A549_result_dir --detect_path $A549_fasta_dir/peptide_scores_finetuned.txt --output_dir $analysis_dir/output/
