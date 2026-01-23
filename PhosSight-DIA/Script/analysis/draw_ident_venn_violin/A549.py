@@ -462,8 +462,8 @@ def main(
         [color_style["original"], color_style["finetuned"]],
         output_dir / "peptide_violin_detectability_phos_202503_A549_0h_24h.svg",
         score_file=detectability_score_path,
-        id_column='sequence',
-        score_column='detectability_score',
+        id_column='Sequence',
+        score_column='Score',
         y_label="Detectability",
         peptide_str_converters = [lambda s: s.replace("S(UniMod:21)", "s").replace("T(UniMod:21)", "t").replace("Y(UniMod:21)", "y").replace("C(UniMod:4)", "C")]
     )
@@ -474,8 +474,8 @@ def main(
         [color_style["original"], color_style["finetuned"]],
         output_dir / "peptide_violin_detectability_all_202503_A549_0h_24h.svg",
         score_file=detectability_score_path,
-        id_column='sequence',
-        score_column='detectability_score',
+        id_column='Sequence',
+        score_column='Score',
         y_label="Detectability",
         peptide_str_converters = [lambda s: s.replace("S(UniMod:21)", "s").replace("T(UniMod:21)", "t").replace("Y(UniMod:21)", "y").replace("C(UniMod:4)", "C")]
     )
