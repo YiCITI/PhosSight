@@ -6,6 +6,7 @@ channels:
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
   - defaults
 dependencies:
+  - python=3.11.7
   - _r-mutex=1.0.1=anacondar_1
   - bzip2=1.0.8=h2466b09_7
   - ca-certificates=2025.8.3=h4c7d964_0
