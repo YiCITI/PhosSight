@@ -537,9 +537,20 @@ TMTquantificationanalysis
 |---|---step5_GetUniprotIDGeneName_17plex.py           # Add Uniprot ID and gene names
 |---|---README.md                    # Detailed workflow documentation
 |---drawfig7/                       # Scripts for Figure 7 generation
-|---|---Create_QuantifiableSites_100Samples.R
-|---|---Create_PhosSight_vs_PhosphoRS_GainSharedLoss.R
-|---|---Create_MissingValue_SiteCount_Comparison.R
+|---|---Step1_Dat_Preprocessing.R
+|---|---Step2_Differential_Phosphorylation_Analysis.R
+|---|---Step3_Survival_Analysis_for_Phosphosites.R
+|---|---Step4_ssKSEA_Analysis.R
+|---|---Step5_Kinase_Survival_Analysis.R
+|---|---Figure7a_Comparison_of_Quantifiable_Phosphosites.R
+|---|---Figure7b_Data_Completeness_Analysis.R
+|---|---Figure7c_Comparative_Analysis_of Prognostic_Phosphosites.R
+|---|---Figure7d_Survival_Analysis_Visualization.R
+|---|---Figure7e_Comparative_Analysis_of_Differentially_Phosphorylated_Sites.R
+|---|---Figure7f_Visualization_of_Representative_Differentially_Phosphorylated_Sites.R
+|---|---Figure7g_Comparison_of_Identified_Kinases.R
+|---|---Figure7h_MARK2_Proteomics_mRNA_Validation.R
+|---|---Figure7i_Kinase_Survival_Validation.R
 |---|---README.md
 |---drawsuppfigs8/                  # Scripts for Supplementary Figure 8 generation
 |---|---Create_PhosSight_Boxplot_AllSamples.R
