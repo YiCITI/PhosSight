@@ -564,9 +564,9 @@ The TMT Quantification Analysis workflow requires the following data files:
 
 #### TMT01-TMT17 Dataset
 
-- **TMT批次**: TMT01-TMT17 (17 batches total)
-- **TMT通道**: 170 channels (17 × 10 channels per batch)
-- **样本通道**: 153 channels (excluding 17 reference channels 126)
+- **TMT batch**: TMT01-TMT17 (17 batches total)
+- **TMT channel**: 170 channels (17 × 10 channels per batch)
+- **Reference channel**: 153 channels (excluding 17 reference channels 126)
 
 #### Required Data Files
 
