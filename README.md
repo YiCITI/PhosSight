@@ -514,7 +514,7 @@ Coming soon...
 
 ## TMT Quantification Analysis
 
-TMT Quantification Analysis provides a complete workflow for TMT-labeled phosphoproteomic data quantification and analysis, including MASCI-based ion intensity extraction, site-level quantification, and comparative analysis between PhosSight and PhosphoRS methods.In our manuscript, we used [MASCI](https://github.com/PNNL-Comp-Mass-Spec/MASIC) to perform the TMT quantification for TMT10 (UCEC)  datasets. We prepared the original scripts we used for the quantification. You can change the input data path and parameters used for MASCI following our scripts to do the TMT quantification.
+TMT Quantification Analysis provides a complete workflow for TMT-labeled phosphoproteomic data quantification and analysis, including MASCI-based ion intensity extraction, site-level quantification, and comparative analysis between PhosSight and PhosphoRS methods.In our manuscript, we used [MASCI](https://github.com/PNNL-Comp-Mass-Spec/MASIC) to perform the TMT quantification for UCEC(CPTAC) datasets. We prepared the original scripts we used for the quantification. You can change the input data path and parameters used for MASCI following our scripts to do the TMT quantification.
 
 
 ### Files Structure
