@@ -323,6 +323,10 @@ In order to perform PhosSight, the input dataset for PhosSight must be prepared 
     <td>The spectral similarity characterized by entropy distance between predicted MS/MS spectrum and experimental MS/MS spectrum of a peptide</td>
   </tr>
   <tr>
+    <td>Peptide detectability</td>
+    <td>The detectability of a peptide predicted by PhosDetect</td>
+  </tr>
+  <tr>
     <td rowspan="7">Search engine independent features</td>
     <td>Mass_Error</td>
     <td>Difference between theoretical and experimental mass</td>
