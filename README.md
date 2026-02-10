@@ -314,7 +314,7 @@ In order to perform PhosSight, the input dataset for PhosSight must be prepared 
     <th>Feature description</th>
   </tr>
   <tr>
-    <td rowspan="2">Features based on deep learning</td>
+    <td rowspan="3">Features based on deep learning</td>
     <td>RT Ratio</td>
     <td>RT ratio  between observed RT and predicted RT</td>
   </tr>
