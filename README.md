@@ -21,6 +21,13 @@
       - [Kinase activity score inference](#kinase-activity-score-inference)
   - [DIA](#dia)
     - [Files Structure](#files-structure-2)
+    - [How to Use (DIA)](#how-to-use-dia)
+    - [Data type (DIA)](#data-type-dia)
+    - [Download example data (DIA)](#download-example-data-dia)
+    - [Directory structure of input (DIA)](#directory-structure-of-input-dia)
+    - [Parameters of PhosSight-DIA](#parameters-of-phossight-dia)
+    - [Run PhosSight-DIA](#run-phossight-dia)
+    - [Output (DIA)](#output-dia)
   - [TMT Quantification Analysis](#tmt-quantification-analysis)
     - [Files Structure](#files-structure-3)
     - [How to Use](#how-to-use-1)
@@ -493,24 +500,107 @@ PhosSight also output two tables as the final results:
 
 ```
 PhosSight-DIA
-|--- spec_parquet_filter    # Filter the spectral library in parquet format
-|--- Script                 # Scripts for PhosSight-DIAs
-|     |--- PhosSight.sh     # Main script for PhosSight-DIA pipeline
+|---Install/
+|---|---requirements.txt                    # Python dependencies for DIA pipeline
+|---Script/
+|---|---PhosSight.sh                        # Main one-click DIA workflow script (all key parameters are configured here)
+|---|---run_diann_syn.py                    # DIA-NN batch search for synthetic dataset
+|---|---run_diann_A549.py                   # DIA-NN batch search for A549 dataset
+|---|---generate_pep_fasta/                 # Generate peptide FASTA/list files for filtering and PhosDetect
+|---|---spec_parquet_filter/                # Filter spectral-library parquet files by peptide lists/scores
+|---|---analysis/                           # Post-search analysis and plotting scripts
+|---|---PhosDetect/                         # PhosDetect code and pretrained model used for detectability scoring
+|---predict_detectability.sh                # Standalone detectability prediction script
+|---README_predict_detectability.md         # Documentation for predict_detectability.sh
 ```
 
-### Prerequisites
+- **Install/requirements.txt** contains required Python packages for preprocessing, PhosDetect scoring, and post-analysis.
+- **Script/PhosSight.sh** is the primary workflow entrypoint: dependency setup, DIA-NN calls, library generation/filtering, PhosDetect pretrain+finetune scoring, and downstream analysis.
+- **Script/run_diann_syn.py** and **Script/run_diann_A549.py** run DIA-NN in different modes (`original`, `pretrained`, `finetuned`, and small-run mode for fine-tuning data generation for synthetic peptide dataset and A549 dataset).
+- **Script/generate_pep_fasta/** prepares peptide-level inputs from FASTA for library filtering and detectability prediction.
+- **Script/spec_parquet_filter/** provides utilities to produce `spec_library_original.parquet`, `pretrained_filtered/`, and `finetuned_filtered/` libraries.
+- **Script/analysis/** includes scripts for entrapment FDR, upset plot, venn/violin, and runtime figure generation.
 
-Before using PhosSight-DIA, please install Singularity and set up a Singularity container as recommended by DIA-NN. For detailed instructions, you can refer to the following official resources:
+### How to Use (DIA)
 
-DIA-NN's official documentation: [Official Setup Guide](https://github.com/vdemichev/DiaNN/?tab=readme-ov-file#installation)
+The installation and repository deployment steps are the same as DDA (Git clone + dependency setup). The key difference is that DIA parameters and run logic are centralized in `PhosSight-DIA/Script/PhosSight.sh`.
 
-Recommended community guide: [Community Guide](https://github.com/vdemichev/DiaNN/issues/1202#issuecomment-2417108281)
+1. Install dependencies and ensure the following software is available on Linux:
+   - Singularity
+   - DIA-NN 2.2.0 (via Singularity image)
+   - Anaconda/Miniconda
+2. Clone the repository and navigate to the PhosSight-DIA folder:
+   ```bash
+   git clone https://github.com/PhosSight/PhosSight.git
+   cd PhosSight-DIA
+   ```
+3. Configure your paths and workflow parameters directly in `PhosSight-DIA/Script/PhosSight.sh`.
+4. Run the DIA workflow script:
+   ```bash
+   bash PhosSight-DIA/Script/PhosSight.sh
+   ```
 
-We recommend reviewing these links to ensure a correct installation.
+> Note: Before using PhosSight-DIA, please install Singularity and set up a Singularity container as recommended by DIA-NN. For detailed instructions, you can refer to the following official resources:
+> DIA-NN's official documentation: [Official Setup Guide](https://github.com/vdemichev/DiaNN/?tab=readme-ov-file#installation).
+> Recommended community guide: [Community Guide](https://github.com/vdemichev/DiaNN/issues/1202#issuecomment-2417108281).
+> We recommend reviewing these links to ensure a correct installation.
 
+### Data type (DIA)
 
+- Instrument Type: follows DIA-NN 2.2.0 support. In general, instrument/data types supported by DIA-NN are supported by this DIA workflow.
+- Computational Requirements: this workflow is developed and benchmarked on Linux, and typically requires high memory (recommended: **200 GB+ RAM**).
 
-Coming soon...
+### Download example data (DIA)
+
+- Example DIA datasets can be downloaded from Zenodo: **DOI: 10.5281/zenodo.18182039**.
+
+### Directory structure of input (DIA)
+
+For running PhosSight-DIA, prepare at least the following input directories:
+
+```
+|---Input_root
+|---|---raw_dir
+|---|---|---sample1.raw
+|---|---|---sample2.raw
+|---|---|---...
+|---|---fasta_dir
+|---|---|---database.fasta
+```
+
+- **raw_dir** stores DIA raw files (`.raw`).
+- **fasta_dir** stores protein sequence database files (`.fasta`).
+- Other directories used in the workflow are generated/used as output or intermediate paths defined in `PhosSight.sh`.
+
+### Parameters of PhosSight-DIA
+
+All DIA parameters are currently configured inside `PhosSight-DIA/Script/PhosSight.sh`.
+
+For manuscript-stage usage, we recommend documenting and modifying the following key parameter groups in the script:
+
+| Parameter Group | Description |
+| --------------- | ----------- |
+| Path settings | `anaconda_path`, DIA-NN Singularity image path, DIA-NN executable path, dataset-specific `raw_dir`, `fasta_dir`, `spec_lib_dir`, `result_dir`, and `analysis_dir` |
+| DIA-NN search settings | DIA-NN command options in the script (e.g., threads, mass tolerance, window, q-value, modification settings) |
+| PhosDetect scoring/fine-tuning settings | pretrained model usage, fine-tuning epochs/patience/learning rate/device |
+| Library filtering settings | ratio/score-based filtering settings used to generate `pretrained_filtered` and `finetuned_filtered` spectral libraries |
+
+### Run PhosSight-DIA
+
+Run directly with:
+
+```bash
+bash PhosSight-DIA/Script/PhosSight.sh
+```
+
+### Output (DIA)
+
+- Main DIA result root is the `result_dir` configured in `PhosSight.sh`.
+- Typical result categories include:
+  - `original` (baseline search with original library)
+  - `pretrained_ratio_*` (library filtered by pretrained PhosDetect scores)
+  - `finetuned_ratio_*` (library filtered by fine-tuned PhosDetect scores, i.e., optimized DIA-NN search space)
+- Figure/statistics outputs used for manuscript analysis are generated under `analysis_dir/output`.
 
 ## TMT Quantification Analysis
 
