@@ -16,11 +16,14 @@ def add_decoy_sites_to_fasta(input_fasta, output_fasta, prefix):
 	for record in records:
 		existing_sequences.add(str(record.seq))
 
-	new_entries = []
-	decoy_index = 0
+	# Always enumerate from uppercase parent sequences so each generated decoy
+	# contains at most one lowercase STY site.
+	base_sequences = {seq.upper() for seq in existing_sequences}
 
-	for record in records:
-		seq = str(record.seq)
+	new_entries = []
+	decoy_index = 0 
+
+	for seq in base_sequences:
 		for pos, aa in enumerate(seq):
 			if aa in {"S", "T", "Y"}:
 				decoy_seq = seq[:pos] + aa.lower() + seq[pos + 1 :]
