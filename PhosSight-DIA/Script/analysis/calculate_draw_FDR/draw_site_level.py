@@ -136,16 +136,17 @@ def main(
         raise ValueError("All synthetic rows are missing in FASTA map after filtering.")
 
     total_hits = len(df_syn)
+    target_hits = (df_syn['target_decoy'] == 'target').sum()
     decoy_hits = (df_syn['target_decoy'] == 'decoy').sum()
-    decoy_ratio = decoy_hits / total_hits
+    esti_FDP = decoy_hits / target_hits
 
     print(f"Removed no-(UniMod:21) rows: {removed_no_unimod21}")
     print(f"Removed multi-(UniMod:21) rows: {removed_multi_unimod21}")
     print(f"Synthetic identifications (after removing missing): {total_hits}")
     print(f"Removed missing mappings: {missing_count}")
     print(f"Decoy hits: {decoy_hits}")
-    print(f"Decoy ratio: {decoy_ratio:.6f} ({decoy_ratio * 100:.3f}%)")
-    print(f"Pass 1% threshold: {decoy_ratio <= 0.01}")
+    print(f"Decoy ratio: {esti_FDP:.6f} ({esti_FDP * 100:.3f}%)")
+    print(f"Pass 1% threshold: {esti_FDP <= 0.01}")
 
     if output_dir is not None:
         os.makedirs(output_dir, exist_ok=True)
@@ -153,7 +154,7 @@ def main(
         fig, ax = plt.subplots(figsize=figure_size)
         ax.bar(
             ['Decoy ratio'],
-            [decoy_ratio],
+            [esti_FDP],
             color=color_style.get('finetuned', '#4C72B0'),
             width=0.6
         )
@@ -165,7 +166,7 @@ def main(
             label='1% threshold'
         )
         ax.set_ylabel('Site-level decoy ratio')
-        ax.set_ylim(0, max(0.012, decoy_ratio * 1.2))
+        ax.set_ylim(0, max(0.012, esti_FDP * 1.2))
         ax.grid(axis='y', linestyle='--', alpha=0.7)
         ax.legend(frameon=False)
 
