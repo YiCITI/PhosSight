@@ -1,0 +1,14 @@
+Name	Value
+PhosSightPath	E:/MyProject/PTM-Project/PhosSight/PhosSight-DDA
+anacondaPath	D:/Anaconda3
+decoyPrefix	REV_
+searchEngine	msfragger
+rawSpectraPath	E:/MyProject/PTM-Project/datasets/ExampleData2/PXD023665/RAW
+spectraPath	E:/MyProject/PTM-Project/datasets/ExampleData2/PXD023665/MGF
+inputFeaturePath	E:/MyProject/PTM-Project/datasets/ExampleData2/PXD023665/features_msfragger.txt
+outputPath	E:/MyProject/PTM-Project/datasets/ExampleData2/PXD023665_msfragger
+VariableMods	1,Oxidation,M,15.994919,1;2,Phospho,S,79.96633,2;3,Phospho,T,79.96633,2;4,Phospho,Y,79.96633,2
+FixedMods	5,Carbamidomethyl,C,57.021464,3
+ModsReplace	[79.96633],Phospho
+phosSightNegativePath	E:/MyProject/PTM-Project/PhosSight/PhosSight-DDA/Script/PhosDetect/data/all_negative.txt
+phosSightPretrainedModelPath	E:/MyProject/PTM-Project/PhosSight/PhosSight-DDA/Script/PhosDetect/model/best_model.pth
