@@ -76,20 +76,16 @@ python $PhosSight_DIA_dir/Script/run_diann_A549.py --step two_rep --diann_cmd_pr
 echo "Generate peptide detectability predictions using pretrained model"
 
 # For syn dataset
-python $PhosSight_DIA_dir/Script/PhosDetect/code/program_predict.py \
-    -w $PhosSight_DIA_dir/Script/PhosDetect/pretrained_model \
+python $PhosSight_DIA_dir/Script/PhosDetect/code/fasta_peptide_scoring.py \
+    -w $PhosSight_DIA_dir/Script/PhosDetect/model/best_model.pth \
     -p $syn_fasta_dir/combined_syn_yeast_ecoli_castor_original.fasta \
-    -o $syn_fasta_dir/peptide_scores_pretrained.txt \
-    --max_len 53 \
-    --device cuda
+    -o $syn_fasta_dir/peptide_scores_pretrained.txt
 
 # For A549 dataset  
-python $PhosSight_DIA_dir/Script/PhosDetect/code/program_predict.py \
-    -w $PhosSight_DIA_dir/Script/PhosDetect/pretrained_model \
+python $PhosSight_DIA_dir/Script/PhosDetect/code/fasta_peptide_scoring.py \
+    -w $PhosSight_DIA_dir/Script/PhosDetect/model/best_model.pth \
     -p $A549_fasta_dir/human_all_peptides_2_7_46.fasta \
-    -o $A549_fasta_dir/peptide_scores_pretrained.txt \
-    --max_len 53 \
-    --device cuda
+    -o $A549_fasta_dir/peptide_scores_pretrained.txt
 
 # Fine-tune PhosDetect model using experimental results
 echo "Prepare training data for fine-tuning"
