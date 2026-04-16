@@ -6,7 +6,7 @@ pyarrow==21.0.0
 numpy==2.3.3
 
 # PhosDetect
-torch>=2.0.0
+torch==2.8.0
 transformers>=4.20.0
 scikit-learn>=1.0.0
 pandas>=1.3.0
