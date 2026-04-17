@@ -90,6 +90,8 @@ python $PhosSight_DIA_dir/Script/PhosDetect/code/fasta_peptide_scoring.py \
 # Fine-tune PhosDetect model using experimental results
 echo "Prepare training data for fine-tuning"
 
+# TODO: Finetune PhosDetect model using the result in $syn_result_dir and $A549_result_dir (directory for_fintuning_res), and get the fine-tuned PhosDetect, generate the detectability score for $syn_fasta_dir/combined_syn_yeast_ecoli_castor_original.fasta and $A549_fasta_dir/human_all_peptides_2_7_46.fasta and output in $syn_fasta_dir/peptide_scores_finetuned.txt and $A549_fasta_dir/peptide_scores_finetuned.txt
+
 # Generate training data from syn dataset results
 python $PhosSight_DIA_dir/Script/prepare_finetuning_data.py \
     --result_dir $syn_result_dir \
