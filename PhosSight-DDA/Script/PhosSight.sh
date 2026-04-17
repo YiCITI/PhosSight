@@ -178,7 +178,7 @@ folders=($phosphoRSResultsPath $TXTPath $xmlPath $ResultsPath $ResultsAddIsoform
 for folder in "${folders[@]}"; do
   if [ ! -d "$folder" ]; then
     mkdir -p "$folder"
-    #echo "Folder $folder created."
+    echo "Folder $folder created."
   fi
 done
 
@@ -198,7 +198,7 @@ if [ "$searchEngine" = "maxquant" ]; then
   eval "$AddModificationAdjustChargeCommand"
 fi
 ####Comet, MSGF, X!Tandem
-if [ "$searchEngine" = "comet" ] || [ "$searchEngine" = "msgf" ] || [ "$searchEngine" = "xtandem" ]; then
+if [ "$searchEngine" = "comet" ] || [ "$searchEngine" = "msgf" ] || [ "$searchEngine" = "xtandem" ] || [ "$searchEngine" = "msfragger" ]; then
   AddModifedSequenceCommand="python $scriptPath/Features/AddModifedSequence.py \
     \"$inputFeaturePath\" \
     \"$featurePath/features.txt\" \
@@ -483,8 +483,8 @@ run_DeepLocalization_Command="Rscript $scriptPath/DeepRelocalization/calculate_l
 \"$pth_predictionPath/PhosSight.Predict.Phospho.txt\""
 
 
-eval "$run_DeepLocalization_Command"
-# echo ">>> Skip Step7..."
+# eval "$run_DeepLocalization_Command"
+echo ">>> Skip Step7..."
 
 #====================================================================================#
 
@@ -495,8 +495,8 @@ echo "Step 8.1: Method1 Results"
 
 Method1Results_Command="Rscript $scriptPath/Percolator/PhosphoRSResults.R $PGAPath/peptide_level/pga-peptideSummary.txt $PGAPath/psm_level/pga-peptideSummary.txt $featurePath/Features.Localization.entropy.txt $Method1ResultsPath/Method1Results.txt"
 
-eval "$Method1Results_Command"
-# echo ">>> Skip 8.1..."
+# eval "$Method1Results_Command"
+echo ">>> Skip 8.1..."
 
 echo "Step 8.2: Generate Percolator Input"
 GeneratePercolatorInput_Command="Rscript $scriptPath/Percolator/format_percolator_input_PhosSight.R \
@@ -514,8 +514,8 @@ GeneratePercolatorInput_Command="Rscript $scriptPath/Percolator/format_percolato
 \"$pth_predictionPath/PhosSight.Predict.Phospho.txt\" \
 \"$pth_predictionPath/PhosSight.Predict.nonPhospho.txt\""
 
-eval "$GeneratePercolatorInput_Command"
-# echo ">>> Skip Step 8.2..."
+# eval "$GeneratePercolatorInput_Command"
+echo ">>> Skip Step 8.2..."
 
 conda deactivate
 
@@ -523,8 +523,8 @@ echo "Step 8.3: Run Percolator"
 docker_Command="docker run --rm -u 0:0 -v $outputPath/:/data/ -t bzhanglab/percolator:3.4 percolator"
 Percolator_Command="$docker_Command ./Percolator/PhosSight.pin -r ./Percolator/PhosSight/PhosSight.pep.txt -m ./Percolator/PhosSight/PhosSight.psms.txt -w ./Percolator/PhosSight/PhosSight.weights.txt -M ./Percolator/PhosSight/PhosSight.decoy.psms.txt"
 
-eval "$Percolator_Command"
-# echo ">>> Skip Step 8.3..."
+# eval "$Percolator_Command"
+echo ">>> Skip Step 8.3..."
 
 #====================================================================================#
 
@@ -537,8 +537,8 @@ conda activate R_env
 
 PhosSightResults_Command="Rscript $scriptPath/Percolator/GetPhosSightResults_v2.R $featurePath $PhosSightResultsPath $outputPath"
 
-eval "$PhosSightResults_Command"
-# echo ">>> Skip Step 9..."
+# eval "$PhosSightResults_Command"
+echo ">>> Skip Step 9..."
 
 conda deactivate
 

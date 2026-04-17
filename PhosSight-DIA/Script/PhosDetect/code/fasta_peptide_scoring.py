@@ -285,14 +285,15 @@ def main(argv: List[str] | None = None):
     print("正在保存结果...")
     try:
         with open(output_file, 'w', encoding='utf-8') as f:
-            f.write("sequence\tdetectability_score\n")
-            
+            # Output format must match `generate_pep_fasta/process_fasta/filter_pep_fasta.py`,
+            # which parses each line as: peptide<comma-or-tab>score (no header required).
             for i, (seq, score) in enumerate(zip(valid_sequences, probs)):
                 if i % 50000 == 0 and i > 0:
                     progress = (i / len(valid_sequences)) * 100
                     print(f"保存进度: {i}/{len(valid_sequences)} ({progress:.1f}%)")
                 
-                f.write(f"{seq}\t{score:.6f}\n")
+                # Use comma-separated to be unambiguous.
+                f.write(f"{seq},{score:.6f}\n")
         
         print(f"结果保存完成！")
         print(f"结果已保存到: {output_file}")

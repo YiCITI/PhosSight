@@ -62,8 +62,8 @@ for line in lines:
     key = Title + '_' + Mod_Sequence_for_phosphoRS2
     if key not in featuresInfo.keys():
         featuresInfo[key] = {'line':line,'Link':Title}
-    else:
-        print(line)
+    # else:
+        # print(line)
 
 links = []
 indexs = []

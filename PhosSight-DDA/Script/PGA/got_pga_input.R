@@ -23,6 +23,10 @@ if (software == "msgf"){
 } else if (software == "maxquant"){
         output_data <- input %>%
                 select(Title, Charge, Mass, Peptide, Modification, Proteins, Score)
+} else if (software == "msfragger"){
+        output_data <- input %>%
+                select(Title, Charge, Mass, Peptide, Modification, Proteins, expect)
+	output_data$expect <- -log(output_data$expect)
 }
 
 colnames(output_data) <- c("index", "charge", "mass", "peptide", "mods", "protein", "score")

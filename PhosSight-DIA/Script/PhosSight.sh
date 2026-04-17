@@ -95,20 +95,19 @@ python $PhosSight_DIA_dir/Script/prepare_finetuning_data.py \
     --result_dir $syn_result_dir \
     --fasta_file $syn_fasta_dir/combined_syn_yeast_ecoli_castor_original.fasta \
     --output_train $syn_fasta_dir/phossight_train_syn.txt \
-    --output_predict $syn_fasta_dir/phossight_prediction_syn.txt
 
 # Generate training data from A549 dataset results
 python $PhosSight_DIA_dir/Script/prepare_finetuning_data.py \
     --result_dir $A549_result_dir \
     --fasta_file $A549_fasta_dir/human_all_peptides_2_7_46.fasta \
     --output_train $A549_fasta_dir/phossight_train_A549.txt \
-    --output_predict $A549_fasta_dir/phossight_prediction_A549.txt
 
 echo "Fine-tune PhosDetect model"
 
+
 # Fine-tune for syn dataset
 python $PhosSight_DIA_dir/Script/PhosDetect/code/program_train.py \
-    -w $PhosSight_DIA_dir/Script/PhosDetect/pretrained_model \
+    -w $PhosSight_DIA_dir/Script/PhosDetect/model/best_model.pth \
     -m $syn_fasta_dir/phossight_finetune_syn.pth \
     -p $syn_fasta_dir/phossight_train_syn.txt \
     -e 5 \
@@ -119,7 +118,7 @@ python $PhosSight_DIA_dir/Script/PhosDetect/code/program_train.py \
 
 # Fine-tune for A549 dataset
 python $PhosSight_DIA_dir/Script/PhosDetect/code/program_train.py \
-    -w $PhosSight_DIA_dir/Script/PhosDetect/pretrained_model \
+    -w $PhosSight_DIA_dir/Script/PhosDetect/model/best_model.pth \
     -m $A549_fasta_dir/phossight_finetune_A549.pth \
     -p $A549_fasta_dir/phossight_train_A549.txt \
     -e 5 \
@@ -131,20 +130,18 @@ python $PhosSight_DIA_dir/Script/PhosDetect/code/program_train.py \
 echo "Step 7.4: Generate peptide detectability predictions using fine-tuned models"
 
 # For syn dataset with fine-tuned model
-python $PhosSight_DIA_dir/Script/PhosDetect/code/program_predict.py \
-    -m $syn_fasta_dir/phossight_finetune_syn.pth \
-    -p $syn_fasta_dir/phossight_prediction_syn.txt \
-    -o $syn_fasta_dir/peptide_scores_finetuned.txt \
-    --max_len 53 \
-    --device cuda
 
-# For A549 dataset with fine-tuned model
-python $PhosSight_DIA_dir/Script/PhosDetect/code/program_predict.py \
-    -m $A549_fasta_dir/phossight_finetune_A549.pth \
-    -p $A549_fasta_dir/phossight_prediction_A549.txt \
-    -o $A549_fasta_dir/peptide_scores_finetuned.txt \
-    --max_len 53 \
-    --device cuda
+# For syn dataset
+python $PhosSight_DIA_dir/Script/PhosDetect/code/fasta_peptide_scoring.py \
+    -w $syn_fasta_dir/phossight_finetune_syn.pth \
+    -p $syn_fasta_dir/combined_syn_yeast_ecoli_castor_original.fasta \
+    -o $syn_fasta_dir/peptide_scores_finetuned.txt
+
+# For A549 dataset  
+python $PhosSight_DIA_dir/Script/PhosDetect/code/fasta_peptide_scoring.py \
+    -w $A549_fasta_dir/phossight_finetune_A549.pth \
+    -p $A549_fasta_dir/human_all_peptides_2_7_46.fasta \
+    -o $A549_fasta_dir/peptide_scores_finetuned.txt
 
 # =============================================================================================
 # Filter the spectral library to generate spectral library for DIA analysis
