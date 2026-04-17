@@ -3,6 +3,7 @@
 
 from process_fasta.generate_samples import generate_modified_pep_fasta_file
 from process_fasta.txt2fasta import txt_to_fasta
+from process_fasta.add_decoy_sites import add_decoy_sites_to_fasta
 from process_fasta.combine_fasta import combine_fasta
 from process_fasta.filter_pep_fasta import filter_peptides_by_ratio, filter_peptides_above_thres
 import argparse
@@ -47,9 +48,14 @@ def step1_prepare_all_peptides(work_dir):
     txt_to_fasta(txt_path=path.join(work_dir, 'syn_pep_STY.txt'),
                  fasta_path=path.join(work_dir, 'syn_peptides.fasta'),
                  prefix='syn|syn_peptide')
+    add_decoy_sites_to_fasta(
+        input_fasta=path.join(work_dir, 'syn_peptides.fasta'),
+        output_fasta=path.join(work_dir, 'syn_peptides_with_decoy_sites.fasta'),
+        prefix='dec_site|decoy_peptide'
+    )
 
     print("Combining all synthetic peptides, yeast peptides and ecoli peptides into one FASTA file...")
-    combine_fasta(fasta1_path=path.join(work_dir, 'syn_peptides.fasta'),
+    combine_fasta(fasta1_path=path.join(work_dir, 'syn_peptides_with_decoy_sites.fasta'),
                   fasta2_path=path.join(work_dir, 'yeast_all_peptides_2_7_46.fasta'),
                   output_path=path.join(work_dir, 'combined_syn_yeast_original.fasta'))
     combine_fasta(fasta1_path=path.join(work_dir, 'combined_syn_yeast_original.fasta'),

@@ -21,6 +21,13 @@
       - [Kinase activity score inference](#kinase-activity-score-inference)
   - [DIA](#dia)
     - [Files Structure](#files-structure-2)
+    - [How to Use (DIA)](#how-to-use-dia)
+    - [Data type (DIA)](#data-type-dia)
+    - [Download example data (DIA)](#download-example-data-dia)
+    - [Directory structure of input (DIA)](#directory-structure-of-input-dia)
+    - [Parameters of PhosSight-DIA](#parameters-of-phossight-dia)
+    - [Run PhosSight-DIA](#run-phossight-dia)
+    - [Output (DIA)](#output-dia)
   - [TMT Quantification Analysis](#tmt-quantification-analysis)
     - [Files Structure](#files-structure-3)
     - [How to Use](#how-to-use-1)
@@ -314,13 +321,17 @@ In order to perform PhosSight, the input dataset for PhosSight must be prepared 
     <th>Feature description</th>
   </tr>
   <tr>
-    <td rowspan="2">Features based on deep learning</td>
+    <td rowspan="3">Features based on deep learning</td>
     <td>RT Ratio</td>
     <td>RT ratio  between observed RT and predicted RT</td>
   </tr>
   <tr>
     <td>Spectrum similarity</td>
     <td>The spectral similarity characterized by entropy distance between predicted MS/MS spectrum and experimental MS/MS spectrum of a peptide</td>
+  </tr>
+  <tr>
+    <td>Peptide detectability</td>
+    <td>The detectability of a peptide predicted by PhosDetect</td>
   </tr>
   <tr>
     <td rowspan="7">Search engine independent features</td>
@@ -489,28 +500,111 @@ PhosSight also output two tables as the final results:
 
 ```
 PhosSight-DIA
-|--- spec_parquet_filter    # Filter the spectral library in parquet format
-|--- Script                 # Scripts for PhosSight-DIAs
-|     |--- PhosSight.sh     # Main script for PhosSight-DIA pipeline
+|---Install/
+|---|---requirements.txt                    # Python dependencies for DIA pipeline
+|---Script/
+|---|---PhosSight.sh                        # Main one-click DIA workflow script (all key parameters are configured here)
+|---|---run_diann_syn.py                    # DIA-NN batch search for synthetic dataset
+|---|---run_diann_A549.py                   # DIA-NN batch search for A549 dataset
+|---|---generate_pep_fasta/                 # Generate peptide FASTA/list files for filtering and PhosDetect
+|---|---spec_parquet_filter/                # Filter spectral-library parquet files by peptide lists/scores
+|---|---analysis/                           # Post-search analysis and plotting scripts
+|---|---PhosDetect/                         # PhosDetect code and pretrained model used for detectability scoring
+|---predict_detectability.sh                # Standalone detectability prediction script
+|---README_predict_detectability.md         # Documentation for predict_detectability.sh
 ```
 
-### Prerequisites
+- **Install/requirements.txt** contains required Python packages for preprocessing, PhosDetect scoring, and post-analysis.
+- **Script/PhosSight.sh** is the primary workflow entrypoint: dependency setup, DIA-NN calls, library generation/filtering, PhosDetect pretrain+finetune scoring, and downstream analysis.
+- **Script/run_diann_syn.py** and **Script/run_diann_A549.py** run DIA-NN in different modes (`original`, `pretrained`, `finetuned`, and small-run mode for fine-tuning data generation for synthetic peptide dataset and A549 dataset).
+- **Script/generate_pep_fasta/** prepares peptide-level inputs from FASTA for library filtering and detectability prediction.
+- **Script/spec_parquet_filter/** provides utilities to produce `spec_library_original.parquet`, `pretrained_filtered/`, and `finetuned_filtered/` libraries.
+- **Script/analysis/** includes scripts for entrapment FDR, upset plot, venn/violin, and runtime figure generation.
 
-Before using PhosSight-DIA, please install Singularity and set up a Singularity container as recommended by DIA-NN. For detailed instructions, you can refer to the following official resources:
+### How to Use (DIA)
 
-DIA-NN's official documentation: [Official Setup Guide](https://github.com/vdemichev/DiaNN/?tab=readme-ov-file#installation)
+The installation and repository deployment steps are the same as DDA (Git clone + dependency setup). The key difference is that DIA parameters and run logic are centralized in `PhosSight-DIA/Script/PhosSight.sh`.
 
-Recommended community guide: [Community Guide](https://github.com/vdemichev/DiaNN/issues/1202#issuecomment-2417108281)
+1. Install dependencies and ensure the following software is available on Linux:
+   - Singularity
+   - DIA-NN 2.2.0 (via Singularity image)
+   - Anaconda/Miniconda
+2. Clone the repository and navigate to the PhosSight-DIA folder:
+   ```bash
+   git clone https://github.com/PhosSight/PhosSight.git
+   cd PhosSight-DIA
+   ```
+3. Configure your paths and workflow parameters directly in `PhosSight-DIA/Script/PhosSight.sh`.
+4. Run the DIA workflow script:
+   ```bash
+   bash PhosSight-DIA/Script/PhosSight.sh
+   ```
 
-We recommend reviewing these links to ensure a correct installation.
+> Note: Before using PhosSight-DIA, please install Singularity and set up a Singularity container as recommended by DIA-NN. For detailed instructions, you can refer to the following official resources:
+> DIA-NN's official documentation: [Official Setup Guide](https://github.com/vdemichev/DiaNN/?tab=readme-ov-file#installation).
+> Recommended community guide: [Community Guide](https://github.com/vdemichev/DiaNN/issues/1202#issuecomment-2417108281).
+> We recommend reviewing these links to ensure a correct installation.
 
+### Data type (DIA)
 
+- Instrument Type: follows DIA-NN 2.2.0 support. In general, instrument/data types supported by DIA-NN are supported by this DIA workflow.
+- Computational Requirements: this workflow is developed and benchmarked on Linux, and typically requires high memory (recommended: **200 GB+ RAM**).
 
-Coming soon...
+### Download example data (DIA)
+
+- Example DIA datasets can be downloaded from Zenodo: **DOI: 10.5281/zenodo.18182039**.
+
+### Directory structure of input (DIA)
+
+For running PhosSight-DIA, prepare at least the following input directories:
+
+```
+|---Input_root
+|---|---raw_dir
+|---|---|---sample1.raw
+|---|---|---sample2.raw
+|---|---|---...
+|---|---fasta_dir
+|---|---|---database.fasta
+```
+
+- **raw_dir** stores DIA raw files (`.raw`).
+- **fasta_dir** stores protein sequence database files (`.fasta`).
+- Other directories used in the workflow are generated/used as output or intermediate paths defined in `PhosSight.sh`.
+
+### Parameters of PhosSight-DIA
+
+All DIA parameters are currently configured inside `PhosSight-DIA/Script/PhosSight.sh`.
+
+For manuscript-stage usage, we recommend documenting and modifying the following key parameter groups in the script:
+
+| Parameter Group | Description |
+| --------------- | ----------- |
+| Path settings | `anaconda_path`, DIA-NN Singularity image path, DIA-NN executable path, dataset-specific `raw_dir`, `fasta_dir`, `spec_lib_dir`, `result_dir`, and `analysis_dir` |
+| DIA-NN search settings | DIA-NN command options in the script (e.g., threads, mass tolerance, window, q-value, modification settings) |
+| PhosDetect scoring/fine-tuning settings | pretrained model usage, fine-tuning epochs/patience/learning rate/device |
+| Library filtering settings | ratio/score-based filtering settings used to generate `pretrained_filtered` and `finetuned_filtered` spectral libraries |
+
+### Run PhosSight-DIA
+
+Run directly with:
+
+```bash
+bash PhosSight-DIA/Script/PhosSight.sh
+```
+
+### Output (DIA)
+
+- Main DIA result root is the `result_dir` configured in `PhosSight.sh`.
+- Typical result categories include:
+  - `original` (baseline search with original library)
+  - `pretrained_ratio_*` (library filtered by pretrained PhosDetect scores)
+  - `finetuned_ratio_*` (library filtered by fine-tuned PhosDetect scores, i.e., optimized DIA-NN search space)
+- Figure/statistics outputs used for manuscript analysis are generated under `analysis_dir/output`.
 
 ## TMT Quantification Analysis
 
-TMT Quantification Analysis provides a complete workflow for TMT-labeled phosphoproteomic data quantification and analysis, including MASCI-based ion intensity extraction, site-level quantification, and comparative analysis between PhosSight and PhosphoRS methods.In our manuscript, we used [MASCI](https://github.com/PNNL-Comp-Mass-Spec/MASIC) to perform the TMT quantification for TMT10 (UCEC)  datasets. We prepared the original scripts we used for the quantification. You can change the input data path and parameters used for MASCI following our scripts to do the TMT quantification.
+TMT Quantification Analysis provides a complete workflow for TMT-labeled phosphoproteomic data quantification and analysis, including MASCI-based ion intensity extraction, site-level quantification, and comparative analysis between PhosSight and PhosphoRS methods.In our manuscript, we used [MASCI](https://github.com/PNNL-Comp-Mass-Spec/MASIC) to perform the TMT quantification for UCEC(CPTAC) datasets. We prepared the original scripts we used for the quantification. You can change the input data path and parameters used for MASCI following our scripts to do the TMT quantification.
 
 
 ### Files Structure
@@ -533,9 +627,20 @@ TMTquantificationanalysis
 |---|---step5_GetUniprotIDGeneName_17plex.py           # Add Uniprot ID and gene names
 |---|---README.md                    # Detailed workflow documentation
 |---drawfig7/                       # Scripts for Figure 7 generation
-|---|---Create_QuantifiableSites_100Samples.R
-|---|---Create_PhosSight_vs_PhosphoRS_GainSharedLoss.R
-|---|---Create_MissingValue_SiteCount_Comparison.R
+|---|---Step1_Dat_Preprocessing.R
+|---|---Step2_Differential_Phosphorylation_Analysis.R
+|---|---Step3_Survival_Analysis_for_Phosphosites.R
+|---|---Step4_ssKSEA_Analysis.R
+|---|---Step5_Kinase_Survival_Analysis.R
+|---|---Figure7a_Comparison_of_Quantifiable_Phosphosites.R
+|---|---Figure7b_Data_Completeness_Analysis.R
+|---|---Figure7c_Comparative_Analysis_of Prognostic_Phosphosites.R
+|---|---Figure7d_Survival_Analysis_Visualization.R
+|---|---Figure7e_Comparative_Analysis_of_Differentially_Phosphorylated_Sites.R
+|---|---Figure7f_Visualization_of_Representative_Differentially_Phosphorylated_Sites.R
+|---|---Figure7g_Comparison_of_Identified_Kinases.R
+|---|---Figure7h_MARK2_Proteomics_mRNA_Validation.R
+|---|---Figure7i_Kinase_Survival_Validation.R
 |---|---README.md
 |---drawsuppfigs8/                  # Scripts for Supplementary Figure 8 generation
 |---|---Create_PhosSight_Boxplot_AllSamples.R
@@ -560,9 +665,9 @@ The TMT Quantification Analysis workflow requires the following data files:
 
 #### TMT01-TMT17 Dataset
 
-- **TMT批次**: TMT01-TMT17 (17 batches total)
-- **TMT通道**: 170 channels (17 × 10 channels per batch)
-- **样本通道**: 153 channels (excluding 17 reference channels 126)
+- **TMT batch**: TMT01-TMT17 (17 batches total)
+- **TMT channel**: 170 channels (17 × 10 channels per batch)
+- **Reference channel**: 153 channels (excluding 17 reference channels 126)
 
 #### Required Data Files
 
