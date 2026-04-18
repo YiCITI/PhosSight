@@ -144,8 +144,9 @@ def main(
     print(f"Removed multi-(UniMod:21) rows: {removed_multi_unimod21}")
     print(f"Synthetic identifications (after removing missing): {total_hits}")
     print(f"Removed missing mappings: {missing_count}")
+    print(f"Target hits: {target_hits}")
     print(f"Decoy hits: {decoy_hits}")
-    print(f"Decoy ratio: {esti_FDP:.6f} ({esti_FDP * 100:.3f}%)")
+    print(f"FDP: {esti_FDP:.6f} ({esti_FDP * 100:.3f}%)")
     print(f"Pass 1% threshold: {esti_FDP <= 0.01}")
 
     if output_dir is not None:
@@ -153,7 +154,7 @@ def main(
 
         fig, ax = plt.subplots(figsize=figure_size)
         ax.bar(
-            ['Decoy ratio'],
+            ['FDP'],
             [esti_FDP],
             color=color_style.get('finetuned', '#4C72B0'),
             width=0.6
