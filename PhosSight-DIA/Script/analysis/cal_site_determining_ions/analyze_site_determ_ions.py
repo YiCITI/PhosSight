@@ -1,4 +1,5 @@
 """Site-determining ion analysis for phosphosite localization pairs.
+Analyzes site-determining ions for phosphosite localization pairs to distinguish between different modification sites.
 
 This module provides an end-to-end workflow:
 1. Read MGF spectra indexed by TITLE.
@@ -28,6 +29,16 @@ COLUMN_MAPPING_PRESETS: Dict[str, Dict[str, object]] = {
 		"method_a": {
 			"name": "Method2",
 			"peptide_col": "IsoformSequence_autort_pDeep",
+		},
+		"method_b": {
+			"name": "Method4",
+			"peptide_col": "IsoformSequence_autort_pDeep_phosSight",
+		},
+	},
+	"1vs4": {
+		"method_a": {
+			"name": "Method1",
+			"peptide_col": "IsoformSequence_PhosphoRS",
 		},
 		"method_b": {
 			"name": "Method4",
@@ -322,6 +333,7 @@ def calculate_b_y_ions(
 	fragment_charges: Sequence[int],
 ) -> Dict[Tuple[str, int, int], FragmentIon]:
 	"""Compute charged b/y ions.
+	Generates theoretical charged b/y fragment ions based on given residue masses and charge states.
 
 	Neutral formulas:
 	- b: [N] + [M] - H
@@ -358,10 +370,11 @@ def extract_site_determining_ions(
 	ms2_tolerance: float,
 ) -> Tuple[Dict[Tuple[str, int, int], FragmentIon], Dict[Tuple[str, int, int], FragmentIon]]:
 	"""Keep site-determining ions between two localizations.
+	Extracts signature fragment ions that can differentiate between peptide A and peptide B.
 
 	A site-determining ion is either:
-	- present on one side only, or
-	- present on both sides but with m/z difference greater than tolerance.
+	- present on one side only (e.g., a peak exists in one peptide but not the other), or
+	- present on both sides but with m/z difference greater than tolerance (due to different modification sites).
 	"""
 
 	keys = set(ions_a).union(ions_b)
@@ -390,8 +403,10 @@ def match_ions_to_spectrum(
 	ms2_tolerance: float,
 ) -> Tuple[MatchedIon, ...]:
 	"""Match ions to nearest peak within tolerance and record observed intensity.
+	Matches theoretical ions with actual observed MS2 peaks and records intensity within ms2_tolerance.
 
 	Only matched ions are returned; unmatched theoretical ions are omitted.
+	Theoretical ions not matched in the actual spectrum are ignored.
 	"""
 
 	sorted_peaks = sorted(spectrum.peaks, key=lambda p: p.mz)
@@ -440,6 +455,8 @@ def analyze_localization_pair(
 	ms2_tolerance: float,
 ) -> RowAnalysisResult:
 	"""Analyze one spectrum + two localization peptides.
+	Analyzes a single spectrum and its two predicted localization peptides (including generating
+	theoretical ions, comparing differences, and matching against actual observed peaks).
 
 	Only site-determining ions that can be matched to the spectrum within
 	ms2_tolerance are retained in the returned result.
@@ -1103,4 +1120,6 @@ if __name__ == "__main__":
 
 
 
-# python '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/cal_site_determining_ions/analyze_site_determ_ions.py' --csv '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/input/Figure3D_v2_Method1-8_all.csv' --mgf-dir '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/input/spectra' --ms2-tolerance 0.02 --out '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/output/site_determining_ions/total.csv' --mapping-name 2vs4
+# python '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/cal_site_determining_ions/analyze_site_determ_ions.py' --csv '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/input/Figure3D_v2_Method1-8_all.csv' --mgf-dir '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/input/spectra' --ms2-tolerance 0.02 --out '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/output/site_determining_ions/2vs4.csv' --mapping-name 2vs4
+# python '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/cal_site_determining_ions/analyze_site_determ_ions.py' --csv '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/input/Figure3D_v2_Method1-8_all.csv' --mgf-dir '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/input/spectra' --ms2-tolerance 0.02 --out '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/output/site_determining_ions/1vs4.csv' --mapping-name 1vs4
+# python '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/cal_site_determining_ions/analyze_site_determ_ions.py' --csv '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/input/Figure3D_v2_Method1-8_all.csv' --mgf-dir '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/input/spectra' --ms2-tolerance 0.02 --out '/data1/zhiyuan/github_repo/PhosSight/PhosSight-DIA/Script/analysis/output/site_determining_ions/6vs8.csv' --mapping-name 6vs8
