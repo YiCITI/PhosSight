@@ -255,15 +255,15 @@ AddIsoformSequence_Command="python $scriptPath/PhosphoRS/AddIsoformSequenceForPh
 \"$featurePath/features2.txt\" \
 \"$Mods\""
 
-# eval "$AddIsoformSequence_Command"
-echo ">>> Skip Step1.3..."
+eval "$AddIsoformSequence_Command"
+# echo ">>> Skip Step1.3..."
 
 echo "Step1.4: Combine PhosphoRS Results"
 CombinePhosphoRSResults_Command="python $scriptPath/PhosphoRS/CombinePhosphoRSResults.py \
 $ResultsAddIsoformSequencePath $phosphoRSResultsPath/PhosphoRS.txt"
 
-# eval "$CombinePhosphoRSResults_Command"
-echo ">>> Skip Step1.4..."
+eval "$CombinePhosphoRSResults_Command"
+# echo ">>> Skip Step1.4..."
 
 echo "Step1.5: Add PhosphoRS Results To Features"
 AddPhosphoRSToFeatures_Command="Rscript $scriptPath/PhosphoRS/combine_features_withlocalization.R \
@@ -271,16 +271,16 @@ $featurePath/features2.txt \
 $phosphoRSResultsPath/PhosphoRS.txt \
 $featurePath/features.PhosphoRS.txt"
 
-# eval "$AddPhosphoRSToFeatures_Command"
-echo ">>> Skip Step1.5..."
+eval "$AddPhosphoRSToFeatures_Command"
+# echo ">>> Skip Step1.5..."
 
 echo "Step1.6: Add PhosphoRS Probability"
 AddPhosphoRSProbability_Command="python $scriptPath/PhosphoRS/GetPhosphoRSSiteProbability.py \
 $featurePath/features.PhosphoRS.txt \
 $featurePath/features.PhosphoRS.txt"
 
-# eval "$AddPhosphoRSProbability_Command"
-echo ">>> Skip Step1.6..."
+eval "$AddPhosphoRSProbability_Command"
+# echo ">>> Skip Step1.6..."
 
 #====================================================================================#
 
@@ -294,8 +294,8 @@ $featurePath/features.PhosphoRS.txt \
 $searchEngine \
 $PGAPath/pga-rawPSMs.txt"
 
-# eval "$GeneratePGAInput_Command"
-echo ">>> Skip Step2.1..."
+eval "$GeneratePGAInput_Command"
+# echo ">>> Skip Step2.1..."
 
 conda deactivate
 
@@ -309,8 +309,8 @@ Calculate_FDR_Command="$docker_Command ./PGA/calculate_fdr.R \
 \"$decoyPrefix\" \
 \"FALSE\""
 
-# eval "$Calculate_FDR_Command"
-echo ">>> Skip Step2.2..."
+eval "$Calculate_FDR_Command"
+# echo ">>> Skip Step2.2..."
 
 #====================================================================================#
 
@@ -337,8 +337,8 @@ generate_train_prediction_Command="Rscript $scriptPath/generate_train_prediction
 \"$phosSight_trainPath/\" \
 \"$phosSight_predictionPath/\""
 
-# eval "$generate_train_prediction_Command"
-echo ">>> Skip Step3..."
+eval "$generate_train_prediction_Command"
+# echo ">>> Skip Step3..."
 
 conda deactivate
 
@@ -355,20 +355,20 @@ conda activate AutoRT
 echo "Step 4.1: AutoRT Train"
 autoRT_train_Command="python $scriptPath/AutoRT/autort.py train -i $autoRT_trainPath/auto_rt_train.txt -o $tf_modelPath/ -e 40 -b 64 -u m -m $scriptPath/AutoRT/models/ptm_base_model/phosphorylation_sty/model.json -rlr -n 10"
 
-# eval "$autoRT_train_Command"
-echo ">>> Skip Step4.1..."
+eval "$autoRT_train_Command"
+# echo ">>> Skip Step4.1..."
 
 echo "Step 4.2: AutoRT Predict Phospho"
 autoRT_predict_phospho_Command="python $scriptPath/AutoRT/autort.py predict -t $autoRT_predictionPath/auto_rt_prediction.Phospho.txt -s $tf_modelPath/model.json -o $tf_predictionPath/ -p phospho.prediction"
 
-# eval "$autoRT_predict_phospho_Command"
-echo ">>> Skip Step4.2..."
+eval "$autoRT_predict_phospho_Command"
+# echo ">>> Skip Step4.2..."
 
 echo "Step 4.3: AutoRT Predict nonPhospho"
 autoRT_predict_nonPhospho_Command="python $scriptPath/AutoRT/autort.py predict -t $autoRT_predictionPath/auto_rt_prediction.nonPhospho.txt -s $tf_modelPath/model.json -o $tf_predictionPath/ -p nonPhospho.prediction"
 
-# eval "$autoRT_predict_nonPhospho_Command"
-echo ">>> Skip Step4.3..."
+eval "$autoRT_predict_nonPhospho_Command"
+# echo ">>> Skip Step4.3..."
 
 conda deactivate
 
@@ -384,55 +384,55 @@ conda activate pDeep3
 echo "Step 5.1: Generate pDeep3 parameters"
 generate_pLabel_parameters_Command="python $scriptPath/pDeep3/generate_pLabel_parameters.py $pDeep3_trainPath/pdeep3_train.txt $rawSpectraPath $pLabelPath $pDeep3_resultsPath/pLabelParams.cfg $pDeep3_resultsPath/Train.Phospho.cfg $pDeep3_predictionPath/pdeep3_prediction.Phospho.txt $pDeep3_resultsPath/TrainingData.psmlabel $pDeep3_resultsPath/TrainingData.psmlabel $pDeep3_modelPath $pDeep3_resultsPath/Train.nonPhospho.cfg $pDeep3_predictionPath/pdeep3_prediction.nonPhospho.txt"
 
-# eval "$generate_pLabel_parameters_Command"
-echo ">>> Skip Step5.1..."
+eval "$generate_pLabel_parameters_Command"
+# echo ">>> Skip Step5.1..."
 
 echo "Step 5.2: Run psmLabel"
 cd "$scriptPath/pDeep3/pDeep3/pDeep/psmLabel/"
 psmLabel_Command="./psmLabel.exe $pDeep3_resultsPath/pLabelParams.cfg"
 
-# eval "$psmLabel_Command"
-echo ">>> Skip Step5.2..."
+eval "$psmLabel_Command"
+# echo ">>> Skip Step5.2..."
 
 echo "Step 5.3: Combine pLabel"
 combine_pLabel_Command="python $scriptPath/pDeep3/CombinepLabelFiles.py $pLabelPath $pDeep3_resultsPath/TrainingData.psmlabel"
 
-# eval "$combine_pLabel_Command"
-echo ">>> Skip Step5.3..."
+eval "$combine_pLabel_Command"
+# echo ">>> Skip Step5.3..."
 
 echo "Step 5.4: pDeep3 for Phospho"
 
 run_Phospho_Command="python $scriptPath/pDeep3/Run/run.py $pDeep3_resultsPath/Train.Phospho.cfg $pDeep3_resultsPath/pDeep3_Predict.Phospho.txt"
 
-# eval "$run_Phospho_Command"
-echo ">>> Skip Step5.4..."
+eval "$run_Phospho_Command"
+# echo ">>> Skip Step5.4..."
 
 echo "Step 5.5: pDeep3 for nonPhospho"
 run_nonPhospho_Command="python $scriptPath/pDeep3/Run/run.py $pDeep3_resultsPath/Train.nonPhospho.cfg $pDeep3_resultsPath/pDeep3_Predict.nonPhospho.txt"
 
-# eval "$run_nonPhospho_Command"
-echo ">>> Skip Step5.5..."
+eval "$run_nonPhospho_Command"
+# echo ">>> Skip Step5.5..."
 
 echo "Step 5.6: Build SpectralEntropy"
 cd "$scriptPath/pDeep3/SpectralEntropy/"
 build_SpectralEntropy_Command="python setup.py build_ext --inplace"
 
-# eval "$build_SpectralEntropy_Command"
-echo ">>> Skip Step5.6..."
+eval "$build_SpectralEntropy_Command"
+# echo ">>> Skip Step5.6..."
 
 echo "Step 5.7: Run SpectralEntropy/program.py - Phospho"
 
 run_Phospho_SpectralEntropy_Command="python $scriptPath/pDeep3/SpectralEntropy/program.py $pDeep3_predictionPath/pdeep3_prediction.Phospho.txt $outputPath/Combined.mgf $pDeep3_resultsPath/pDeep3_Predict.Phospho.txt $pDeep3_resultsPath/pDeep3PredictionResults.Phospho.txt"
 
-# eval "$run_Phospho_SpectralEntropy_Command"
-echo ">>> Skip Step5.7..."
+eval "$run_Phospho_SpectralEntropy_Command"
+# echo ">>> Skip Step5.7..."
 
 echo "Step 5.8: Run SpectralEntropy/program.py - nonPhospho"
 
 run_nonPhospho_SpectralEntropy_Command="python $scriptPath/pDeep3/SpectralEntropy/program.py $pDeep3_predictionPath/pdeep3_prediction.nonPhospho.txt $outputPath/Combined.mgf $pDeep3_resultsPath/pDeep3_Predict.nonPhospho.txt $pDeep3_resultsPath/pDeep3PredictionResults.nonPhospho.txt"
 
-# eval "$run_nonPhospho_SpectralEntropy_Command"
-echo ">>> Skip Step5.8..."
+eval "$run_nonPhospho_SpectralEntropy_Command"
+# echo ">>> Skip Step5.8..."
 
 conda deactivate
 
@@ -447,21 +447,21 @@ max_len=53
 echo "Step 6.1: Train PhosSight model"
 phosSight_train_Command="python $scriptPath/PhosDetect/code/program_train.py -w $phosSightPretrainedModelPath -m $pth_modelPath/phossight_finetune.pth -p $phosSight_trainPath/phossight_train.txt -e 5 --patience 5 -lr 1e-4 --device cuda --max_len $max_len"
 
-# eval "$phosSight_train_Command"
-echo ">>> Skip Step6.1..."
+eval "$phosSight_train_Command"
+# echo ">>> Skip Step6.1..."
 
 echo "Step 6.2: PhosSight for nonPhospho"
 
 phosSight_predict_Command="python $scriptPath/PhosDetect/code/program_predict.py -m $pth_modelPath/phossight_finetune.pth -p $phosSight_predictionPath/phossight_prediction.nonPhospho.txt -o $pth_predictionPath/PhosSight.Predict.nonPhospho.txt --max_len $max_len"
 
-# eval "$phosSight_predict_Command"
-echo ">>> Skip Step6.2..."
+eval "$phosSight_predict_Command"
+# echo ">>> Skip Step6.2..."
 
 echo "Step 6.3: PhosSight for Phospho"
 phosSight_predict_Command="python $scriptPath/PhosDetect/code/program_predict.py -m $pth_modelPath/phossight_finetune.pth -p $phosSight_predictionPath/phossight_prediction.Phospho.txt -o $pth_predictionPath/PhosSight.Predict.Phospho.txt --max_len $max_len" 
 
-# eval "$phosSight_predict_Command"
-echo ">>> Skip Step6.3..."
+eval "$phosSight_predict_Command"
+# echo ">>> Skip Step6.3..."
 
 #====================================================================================#
 
@@ -483,8 +483,8 @@ run_DeepLocalization_Command="Rscript $scriptPath/DeepRelocalization/calculate_l
 \"$pth_predictionPath/PhosSight.Predict.Phospho.txt\""
 
 
-# eval "$run_DeepLocalization_Command"
-echo ">>> Skip Step7..."
+eval "$run_DeepLocalization_Command"
+# echo ">>> Skip Step7..."
 
 #====================================================================================#
 
@@ -514,8 +514,8 @@ GeneratePercolatorInput_Command="Rscript $scriptPath/Percolator/format_percolato
 \"$pth_predictionPath/PhosSight.Predict.Phospho.txt\" \
 \"$pth_predictionPath/PhosSight.Predict.nonPhospho.txt\""
 
-# eval "$GeneratePercolatorInput_Command"
-echo ">>> Skip Step 8.2..."
+eval "$GeneratePercolatorInput_Command"
+# echo ">>> Skip Step 8.2..."
 
 conda deactivate
 
@@ -523,8 +523,8 @@ echo "Step 8.3: Run Percolator"
 docker_Command="docker run --rm -u 0:0 -v $outputPath/:/data/ -t bzhanglab/percolator:3.4 percolator"
 Percolator_Command="$docker_Command ./Percolator/PhosSight.pin -r ./Percolator/PhosSight/PhosSight.pep.txt -m ./Percolator/PhosSight/PhosSight.psms.txt -w ./Percolator/PhosSight/PhosSight.weights.txt -M ./Percolator/PhosSight/PhosSight.decoy.psms.txt"
 
-# eval "$Percolator_Command"
-echo ">>> Skip Step 8.3..."
+eval "$Percolator_Command"
+# echo ">>> Skip Step 8.3..."
 
 #====================================================================================#
 
@@ -535,11 +535,69 @@ echo "Step 9: PhosSight Results"
 source $anacondaPath/etc/profile.d/conda.sh
 conda activate R_env
 
-PhosSightResults_Command="Rscript $scriptPath/Percolator/GetPhosSightResults_v2.R $featurePath $PhosSightResultsPath $outputPath"
+PhosSightResults_Command="Rscript $scriptPath/Percolator/GetPhosSightResults.R $featurePath $PhosSightResultsPath $outputPath"
 
-# eval "$PhosSightResults_Command"
-echo ">>> Skip Step 9..."
+eval "$PhosSightResults_Command"
+# echo ">>> Skip Step 9..."
 
 conda deactivate
 
 #====================================================================================#
+
+
+#====================================================================================================#
+# This is for DeepRescore2 part.
+#====================================================================================================#
+#=======================================Step 10: Rescoring using Percolator===========================#
+
+echo "Step 10: Rescoring using Percolator"
+
+source $anacondaPath/etc/profile.d/conda.sh
+conda activate R_env
+
+echo "Step 10.1: Generate Percolator Input"
+GeneratePercolatorInput_Command="Rscript $scriptPath/Percolator/format_percolator_input_DeepRescore2.R \
+\"$featurePath/Features.Localization.entropy.txt\" \
+\"$PGAPath/pga-rawPSMs.txt\" \
+\"$PercolatorPath/DeepRescore2.pin\" \
+\"$searchEngine\" \
+\"$phosphoRSResultsPath/PhosphoRS.txt\" \
+\"$pDeep3_resultsPath/pDeep3PredictionResults.Phospho.txt\" \
+\"$pDeep3_resultsPath/pDeep3PredictionResults.nonPhospho.txt\" \
+\"$autoRT_resultsPath/tf_prediction/phospho.prediction.tsv\" \
+\"$autoRT_resultsPath/tf_prediction/nonPhospho.prediction.tsv\" \
+\"$VariableMods\" \
+\"$FixedMods\""
+
+eval "$GeneratePercolatorInput_Command"
+# echo ">>> Skip Step 10.1..."
+
+conda deactivate
+
+echo "Step 10.2: Run Percolator"
+docker_Command="docker run --rm -u 0:0 -v $outputPath/:/data/ -t bzhanglab/percolator:3.4 percolator"
+Percolator_Command="$docker_Command ./Percolator/DeepRescore2.pin -r ./Percolator/PhosSight/DeepRescore2.pep.txt -m ./Percolator/PhosSight/DeepRescore2.psms.txt -w ./Percolator/PhosSight/DeepRescore2.weights.txt -M ./Percolator/PhosSight/DeepRescore2.decoy.psms.txt"
+
+eval "$Percolator_Command"
+# echo ">>> Skip Step 10.2..."
+
+#====================================================================================#
+
+#=======================================Step 11: Get DeepRescore2 Results===========================#
+
+echo "Step 11: DeepRescore2 Results"
+
+source $anacondaPath/etc/profile.d/conda.sh
+conda activate R_env
+
+DeepRescore2Results_Command="Rscript $scriptPath/Percolator/GetPhosSightResults_without_phosdetect.R $featurePath $PhosSightResultsPath $outputPath"
+
+eval "$DeepRescore2Results_Command"
+# echo ">>> Skip Step 11..."
+
+conda deactivate
+
+#====================================================================================#
+
+
+
