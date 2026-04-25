@@ -41,8 +41,14 @@ def to_modified_sequence(sequence: str) -> str:
     return ''.join(mod_map.get(aa, aa) for aa in sequence)
 
 
-def build_sequence_label_map(fasta_path: Path) -> dict:
-    """Build mapping from modified peptide sequence to target/decoy label."""
+def build_sequence_label_map(fasta_path: Path) -> tuple[dict, int, int]:
+    """Build mapping from modified peptide sequence to target/decoy label.
+
+    Returns
+    -------
+    tuple[dict, int, int]
+        Sequence-label map, target record count, decoy record count.
+    """
     if not fasta_path.exists():
         raise FileNotFoundError(f"FASTA file not found: {fasta_path}")
 
@@ -72,15 +78,35 @@ def build_sequence_label_map(fasta_path: Path) -> dict:
     if not seq_label_map:
         raise ValueError(f"No target/decoy sequences were parsed from FASTA: {fasta_path}")
 
+    if target_count == 0 or decoy_count == 0:
+        raise ValueError(
+            f"Invalid FASTA target/decoy counts parsed from {fasta_path}: "
+            f"target={target_count}, decoy={decoy_count}"
+        )
+
+    decoy_to_target_ratio = decoy_count / target_count
+
     print(f"Built sequence-label map from FASTA: {len(seq_label_map)} entries "
-          f"(target IDs: {target_count}, decoy IDs: {decoy_count})")
-    return seq_label_map
+          f"(target IDs: {target_count}, decoy IDs: {decoy_count}, "
+          f"decoy/target ratio: {decoy_to_target_ratio:.6f})")
+    return seq_label_map, target_count, decoy_count
 
 
-def calculate_fdp(parquet_path: Path, seq_label_map: dict) -> float:
+def calculate_fdp(
+    parquet_path: Path,
+    seq_label_map: dict,
+    target_count: int,
+    decoy_count: int
+) -> float:
     """Calculate site-level FDP for a single parquet file."""
     if parquet_path is None:
         raise ValueError("parquet_path is required")
+
+    if target_count <= 0 or decoy_count <= 0:
+        raise ValueError(
+            f"Invalid target/decoy counts for correction: "
+            f"target_count={target_count}, decoy_count={decoy_count}"
+        )
 
     try:
         df = pd.read_parquet(parquet_path)
@@ -128,8 +154,10 @@ def calculate_fdp(parquet_path: Path, seq_label_map: dict) -> float:
     total_hits = len(df_syn)
     target_hits = (df_syn['target_decoy'] == 'target').sum()
     decoy_hits = (df_syn['target_decoy'] == 'decoy').sum()
-    
-    esti_FDP = decoy_hits / target_hits if target_hits > 0 else float('inf')
+
+    raw_fdp = decoy_hits / target_hits if target_hits > 0 else float('inf')
+    correction_factor = target_count / decoy_count
+    corrected_fdp = raw_fdp * correction_factor if target_hits > 0 else float('inf')
 
     print(f"\n--- Statistics for {parquet_path.name} ---")
     print(f"Removed no-(UniMod:21) rows: {removed_no_unimod21}")
@@ -138,9 +166,12 @@ def calculate_fdp(parquet_path: Path, seq_label_map: dict) -> float:
     print(f"Removed missing mappings: {missing_count}")
     print(f"Target hits: {target_hits}")
     print(f"Decoy hits: {decoy_hits}")
-    print(f"FDP: {esti_FDP:.6f} ({esti_FDP * 100:.3f}%)")
+    print(f"Library correction factor (target/decoy): {correction_factor:.6f} "
+        f"({target_count}/{decoy_count})")
+    print(f"Raw FDP (decoy_hits/target_hits): {raw_fdp:.6f} ({raw_fdp * 100:.3f}%)")
+    print(f"Corrected FDP: {corrected_fdp:.6f} ({corrected_fdp * 100:.3f}%)")
 
-    return esti_FDP
+    return corrected_fdp
 
 
 def main(
@@ -152,14 +183,14 @@ def main(
 ):
     """Read synthetic-peptide identifications and compute site-level FDP for multiple files."""
     
-    seq_label_map = build_sequence_label_map(fasta_path)
+    seq_label_map, target_count, decoy_count = build_sequence_label_map(fasta_path)
 
     fdp_values = []
     plot_labels = []
     plot_colors = []
 
     for path, label, color in zip(parquet_paths, labels, colors):
-        fdp = calculate_fdp(path, seq_label_map)
+        fdp = calculate_fdp(path, seq_label_map, target_count, decoy_count)
         if fdp is not None:
             fdp_values.append(fdp)
             plot_labels.append(label)
@@ -181,7 +212,7 @@ def main(
             color=plot_colors,
             width=0.4
         )
-        ax.set_ylabel('Site-level FDP')
+        ax.set_ylabel('Site-level FDR')
         ax.set_ylim(0, 0.06)
         ax.grid(axis='y', linestyle='--', alpha=0.7)
 
