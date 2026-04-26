@@ -212,7 +212,7 @@ def main(
             color=plot_colors,
             width=0.4
         )
-        ax.set_ylabel('Site-level FDR')
+        ax.set_ylabel('Site-level FDP')
         ax.set_ylim(0, 0.06)
         ax.grid(axis='y', linestyle='--', alpha=0.7)
 
