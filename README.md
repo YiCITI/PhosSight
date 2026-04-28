@@ -244,10 +244,12 @@ PhosSight-DDA
 |---|---PXD023665_maxquant.param
 |---|---PXD023665_msgf.param
 |---|---PXD023665_xtandem.param
+|---|---PXD023665_msfragger.param
 |---|---UCEC_comet.param
 |---|---UCEC_maxquant.param
 |---|---UCEC_msgf.param
 |---|---UCEC_xtandem.param
+|---|---UCEC_msfragger.param
 |---Install
 |---|---InstallDependency.sh
 |---|---environment_R.yml
