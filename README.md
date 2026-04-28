@@ -286,7 +286,7 @@ PhosSight-DDA
 
 - Instrument Type: The proposed approach, PhosSight, is designed to be applicable to mass spectrometry-based proteomics data obtained from various types of instruments, including but not limited to Orbitrap, Q-TOF, and ion trap instruments.
 - Peptide Type: PhosSight is applicable to different types of peptides, including both labeled (e.g., TMT-labeled) and unlabeled peptides. However, it is important to note that PhosSight is specifically designed to handle peptides with phosphorylation modification.
-- The current version supports four search engines, [MS-GF+ (v2019.02.28)](https://github.com/MSGFPlus/msgfplus), [Comet (2018.01 rev.4)](http://comet-ms.sourceforge.net/), [X!Tandem (v2017.2.1.2)](https://www.thegpm.org/TANDEM/), and [MaxQuant (v1.6.5.0)](https://maxquant.org/).
+- The current version supports four search engines, [MS-GF+ (v2019.02.28)](https://github.com/MSGFPlus/msgfplus), [Comet (2018.01 rev.4)](http://comet-ms.sourceforge.net/), [X!Tandem (v2017.2.1.2)](https://www.thegpm.org/TANDEM/), [MaxQuant (v1.6.5.0)](https://maxquant.org/), and [MSFragger (v24.0)](https://msfragger.nesvilab.org/).
 - Computational Requirements: Currently, PhosSight only supports running on Windows systems. The computational requirements for running PhosSight depend on the size of the dataset and the specific hardware configuration. PhosSight utilizes deep learning models, and the computational demands may increase with larger datasets. We recommend running PhosSight on a machine with sufficient computational resources, such as a multi-core CPU and a GPU, to ensure efficient processing.
 
 ### Download example data
