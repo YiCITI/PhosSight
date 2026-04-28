@@ -499,6 +499,7 @@ PhosSight will output results of each step, including
 * generate_train_prediction
 * autoRT_Results
 * pDeep3_Results
+* PhosDetect_Results
 * Percolator
 
 PhosSight also output two tables as the final results:
