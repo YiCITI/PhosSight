@@ -291,7 +291,7 @@ PhosSight-DDA
 
 ### Download example data
 
-- Please go to https://zenodo.org/records/10049730 and download **ExampleData1.zip (Synthetic dataset, PXD000138)**, **ExampleData2.zip (Label free dataset, PXD023665)**, **ExampleData3.zip (TMT dataset, UCEC)** used in our manuscript. Unzip these files as the input for PhosSight.
+- Please go to https://zenodo.org/records/19688067 and download **ExampleData1.zip (Synthetic dataset, PXD000138)**, **ExampleData2.zip (Label free dataset, PXD023665)**, **ExampleData3.zip (TMT dataset, UCEC)** used in our manuscript. Unzip these files as the input for PhosSight.
 
 ### Directory structure of input
 
@@ -423,6 +423,15 @@ In order to perform PhosSight, the input dataset for PhosSight must be prepared 
   <tr>
     <td>X!Tandem:hyperscore</td>
     <td>X!Tandem hyperscore</td>
+  </tr>
+  <tr>
+    <td rowspan="2">Search engine specific features (MSFragger (v24.0))</td>
+    <td>hyperscore</td>
+    <td>The similarity score between the experimental and theoretical spectra</td>
+  </tr>
+  <tr>
+    <td>nextscore</td>
+    <td>nextscore</td>
   </tr>
 </table>
 
