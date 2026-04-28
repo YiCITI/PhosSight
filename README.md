@@ -425,13 +425,17 @@ In order to perform PhosSight, the input dataset for PhosSight must be prepared 
     <td>X!Tandem hyperscore</td>
   </tr>
   <tr>
-    <td rowspan="2">Search engine specific features (MSFragger (v24.0))</td>
+    <td rowspan="3">Search engine specific features (MSFragger (v24.0))</td>
     <td>hyperscore</td>
     <td>The similarity score between the experimental and theoretical spectra</td>
   </tr>
   <tr>
     <td>nextscore</td>
-    <td>nextscore</td>
+    <td>The hyperscore of the second-best scoring peptide candidate for the same spectrum</td>
+  </tr>
+  <tr>
+    <td>expect</td>
+    <td>The expectation value from statistical modeling</td>
   </tr>
 </table>
 
