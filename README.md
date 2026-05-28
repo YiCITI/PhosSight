@@ -827,5 +827,5 @@ We acknowledge the following open-source software and tools used in this project
 - [DIA-NN](https://github.com/vdemichev/DiaNN) - Data-independent acquisition data analysis
 
 ## References
-Ben Wang, Zhiyuan Cheng, Chengying She, Jiahui Zhang, Lin Lv, Hongwen Zhu, Lizhuang Liu, Yan Fu, Xinpei Yi, **PhosSight: A Unified Deep Learning Framework Boosting and Accelerating Phosphoproteomic Identification to Enable Biological Discoveries**. *Under review* (2026).
+Ben Wang, Zhiyuan Cheng, Chengying She, Hongwei Zhao, Jiahui Zhang, Lin Lv, Zhihao Yan, Hongwen Zhu, Lizhuang Liu, Yan Fu, Xinpei Yi, **PhosSight: A Unified Deep Learning Framework Boosting and Accelerating Phosphoproteome Identification to Enable Biological Discoveries**. *Advanced Science* (2026).
 
